@@ -1,0 +1,50 @@
+<idea-plugin>
+    <id>pers.chenan.code</id>
+    <name>MVVMCodePlugin</name>
+    <version>0.0.2</version>
+    <vendor email="chenan.970@outlook.com" url="null">ChenAn</vendor>
+
+    <description><![CDATA[
+      MVVM相关代码生成
+      .............................
+    ]]></description>
+
+    <change-notes><![CDATA[
+      No More
+      ................................
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="173.0"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="plugin.CreateViewCodeAction" class="com.chenan.mvvm.action.CreateViewCodeAction" text="生成mvvm代码"
+                description="Create code of MVVM">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift V"/>
+        </action>
+        <action id="plugin.MakeBeanCodeAction" class="com.chenan.mvvm.action.MakeBeanCodeAction" text="Json 生成 Bean"
+                description="use json to make code of Bean ">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="shift alt B"/>
+        </action>
+        <action id="plugin.CreateBeanCodeAction" class="com.chenan.mvvm.action.CreateBeanCodeAction"
+                text="Json Kotlin Class"
+                description="user json to create code of bean">
+            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="Kotlin.NewFile"/>
+        </action>
+    </actions>
+
+</idea-plugin>
