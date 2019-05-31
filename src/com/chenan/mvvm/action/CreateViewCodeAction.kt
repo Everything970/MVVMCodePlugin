@@ -18,7 +18,7 @@ import java.io.File
 class CreateViewCodeAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
-        if (!e.presentation.isEnabled){
+        if (!e.presentation.isEnabled) {
             Utils.showError("请确认是否处于编辑Activity（kotlin）文件下")
         }
         val project = e.getData(PlatformDataKeys.PROJECT)
@@ -28,7 +28,7 @@ class CreateViewCodeAction : AnAction() {
             Utils.showError("转化失败！\nproject:$project editor:$editor psiFile:$psiFile")
             return
         }
-        CreateCodeDialog().apply {
+        CreateCodeDialog(project).apply {
             setListener(object : CreateCodeDialog.OnClickListener {
                 override fun onAddActivity() {
                     WriteCodeDialog().also {
@@ -124,7 +124,7 @@ class CreateViewCodeAction : AnAction() {
                     val xml = FilenameIndex.getFilesByName(project, "activity${Utils.getLowerActivityName(activityName)}.xml", GlobalSearchScope.allScope(project))
                     if (xml.isNotEmpty()) {
                         val xmlEditor = PsiDocumentManager.getInstance(project).getDocument(xml[0])
-                        xmlEditor?.setText(Utils.getCodeContent(Utils.getCode(TemplateCode.TYPE_LAYOUT+ "/${layoutFile.name}"), packageName, activityName))
+                        xmlEditor?.setText(Utils.getCodeContent(Utils.getCode(TemplateCode.TYPE_LAYOUT + "/${layoutFile.name}"), packageName, activityName))
                     }
                 }
 

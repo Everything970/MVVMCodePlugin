@@ -1,11 +1,14 @@
 package com.chenan.mvvm.ui;
 
-import com.chenan.mvvm.data.Config;
+import com.chenan.mvvm.setting.MVVMStateComponent;
 import com.chenan.mvvm.util.Utils;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.List;
 
@@ -20,14 +23,14 @@ public class CreateCodeDialog extends JDialog {
     private JButton btLayout;
     private JComboBox<String> boxLayout;
 
-    private Config config;
+    private MVVMStateComponent config;
     private List<File> activities;
     private List<File> viewModels;
     private List<File> layouts;
     private OnClickListener listener;
 
-    public CreateCodeDialog() {
-        config = Utils.getConfig();
+    public CreateCodeDialog(Project project) {
+        config = MVVMStateComponent.getInstance(project);
         activities = Utils.getActivityFiles();
         viewModels = Utils.getViewModelFiles();
         layouts = Utils.getLayoutFiles();
@@ -37,21 +40,21 @@ public class CreateCodeDialog extends JDialog {
         int indexLayout = 0;
         for (i = 0; i < activities.size(); i++) {
             String a = activities.get(i).getName().replace(".txt", "");
-            if (a.equals(config.getLateActivity())) {
+            if (a.equals(config.getActivity())) {
                 indexActivity = i;
             }
             boxActivity.addItem(a);
         }
         for (i = 0; i < viewModels.size(); i++) {
             String v = viewModels.get(i).getName().replace(".txt", "");
-            if (v.equals(config.getLateViewModel())) {
+            if (v.equals(config.getViewModel())) {
                 indexViewModel = i;
             }
             boxViewModel.addItem(v);
         }
         for (i = 0; i < layouts.size(); i++) {
             String v = layouts.get(i).getName().replace(".txt", "");
-            if (v.equals(config.getLateLayout())) {
+            if (v.equals(config.getLayout())) {
                 indexLayout = i;
             }
             boxLayout.addItem(v);
@@ -96,16 +99,15 @@ public class CreateCodeDialog extends JDialog {
             return;
         }
         if (listener != null) {
-            listener.onOk(activities.get(indexActivity), viewModels.get(indexViewModel),layouts.get(indexLayout));
+            listener.onOk(activities.get(indexActivity), viewModels.get(indexViewModel), layouts.get(indexLayout));
         }
         String strActivity = (String) boxActivity.getSelectedItem();
         String strViewModel = (String) boxViewModel.getSelectedItem();
         String strLayout = (String) boxLayout.getSelectedItem();
         System.out.println("string a:" + strActivity + " v:" + strViewModel + " l:" + strLayout);
-        config.setActivity(strActivity);
-        config.setViewModel(strViewModel);
-        config.setLayout(strLayout);
-        Utils.saveConfig(config);
+        config.setActivity(strActivity == null ? Utils.defaultActivity : strActivity);
+        config.setViewModel(strViewModel == null ? Utils.defaultViewModel : strViewModel);
+        config.setLayout(strLayout == null ? Utils.defaultLayout : strLayout);
         dispose();
     }
 

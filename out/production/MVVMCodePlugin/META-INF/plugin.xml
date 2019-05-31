@@ -25,7 +25,10 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
+        <projectConfigurable groupId="tools" displayName="代码（MVVM）生成设置" id="setting.MVVMConfigurable"
+                             instance="com.chenan.mvvm.setting.MVVMConfigurable"/>
+        <projectService serviceInterface="com.chenan.mvvm.setting.MVVMStateComponent"
+                        serviceImplementation="com.chenan.mvvm.setting.MVVMStateComponent"/>
     </extensions>
 
     <actions>

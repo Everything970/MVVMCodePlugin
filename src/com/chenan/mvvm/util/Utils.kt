@@ -1,7 +1,6 @@
 package com.chenan.mvvm.util
 
 import com.chenan.mvvm.code.TemplateCode
-import com.chenan.mvvm.data.Config
 import com.google.gson.Gson
 import com.intellij.openapi.ui.DialogBuilder
 import java.io.*
@@ -25,11 +24,6 @@ object Utils {
             createCode(file, TemplateCode.TYPE_ACTIVITY, "$defaultActivity.txt", TemplateCode.activityCode)
             createCode(file, TemplateCode.TYPE_VIEW_MODEL, "$defaultViewModel.txt", TemplateCode.viewModelCode)
             createCode(file, TemplateCode.TYPE_LAYOUT, "$defaultLayout.txt", TemplateCode.layoutCode)
-            saveConfig(file, Config().apply {
-                lateActivity = defaultActivity
-                lateViewModel = defaultViewModel
-                lateLayout = defaultLayout
-            })
         }
         return file
     }
@@ -48,35 +42,6 @@ object Utils {
     @JvmStatic
     fun getLayoutFiles(): List<File> {
         return File(getPluginPath(), TemplateCode.TYPE_LAYOUT).listFiles().filter { it.isFile && it.name.endsWith(".txt") }
-    }
-
-    @JvmStatic
-    fun getConfig(): Config {
-        return Config.getInstance()
-    }
-
-    @JvmStatic
-    fun saveConfig(config: Config) {
-        saveConfig(getPluginPath(), config)
-    }
-
-    fun saveConfig(parentFile: File, config: Config) {
-        val file = File(parentFile, "config.txt")
-        if (!file.exists()) {
-            file.createNewFile()
-        }
-        var fw: FileWriter? = null
-        var bw: BufferedWriter? = null
-        try {
-            fw = FileWriter(file, false)
-            bw = BufferedWriter(fw)
-            bw.write(Gson().toJson(config))
-        } catch (e: Exception) {
-
-        } finally {
-            bw?.close()
-            fw?.close()
-        }
     }
 
     fun createCode(parentFile: File, type: String, name: String, content: String): File? {
@@ -103,6 +68,10 @@ object Utils {
             null
         }
     }
+
+    fun getActivityCode(name: String): String = getCode("${TemplateCode.TYPE_ACTIVITY}/$name.txt")
+    fun getViewModelCode(name: String): String = getCode("${TemplateCode.TYPE_VIEW_MODEL}/$name.txt")
+    fun getLayoutCode(name: String): String = getCode("${TemplateCode.TYPE_LAYOUT}/$name.txt")
 
     fun getCode(name: String): String {
         val file = File(getPluginPath(), name)

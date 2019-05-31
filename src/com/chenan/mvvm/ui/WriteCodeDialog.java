@@ -14,6 +14,7 @@ public class WriteCodeDialog extends JDialog {
     private JButton buttonCancel;
     private JTextField textFieldName;
     private JTextArea textAreaCode;
+    private JTextPane TextPane;
     private OnClickListener listener;
 
     public WriteCodeDialog() {
@@ -68,6 +69,14 @@ public class WriteCodeDialog extends JDialog {
     }
 
     public void showDialog() {
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public void showDialog(String name, String content) {
+        textFieldName.setText(name);
+        textAreaCode.setText(content);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
