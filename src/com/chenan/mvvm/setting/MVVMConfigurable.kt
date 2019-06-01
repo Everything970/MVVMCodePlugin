@@ -5,18 +5,18 @@ import com.chenan.mvvm.ui.MVVMSettingUI
 import com.chenan.mvvm.ui.WriteCodeDialog
 import com.chenan.mvvm.util.PluginHelper
 import com.chenan.mvvm.util.Utils
+import com.intellij.ide.util.PackageChooserDialog
+import com.intellij.ide.util.TreeClassChooserFactory
+import com.intellij.openapi.fileChooser.FileChooser
+import com.intellij.openapi.fileTypes.FileType
+import com.intellij.openapi.fileTypes.StdFileTypes
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.DialogBuilder
-import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.openapi.ui.DialogWrapperDialog
 import com.intellij.openapi.ui.popup.JBPopupFactory
-import java.awt.Dialog
-import java.io.File
 import javax.swing.JCheckBox
 import javax.swing.JComponent
 
-class MVVMConfigurable(project: Project) : SearchableConfigurable {
+class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
 
     private val helper = PluginHelper.getInstance(project)
     private val setting = MVVMStateComponent.getInstance(project)
@@ -136,7 +136,10 @@ class MVVMConfigurable(project: Project) : SearchableConfigurable {
         }
         ui.btDeleteActivity.addActionListener {
             JBPopupFactory.getInstance().createConfirmation("确认删除${ui.comboBoxActivity.selectedItem}吗？", "确定", "取消", {
-
+                val item = ui.comboBoxActivity.selectedItem
+                if (Utils.deleteActivityCode(item.toString())) {
+                    ui.comboBoxActivity.removeItem(item)
+                }
             }, 0).showInFocusCenter()
         }
         ui.btAddViewModel.addActionListener {
@@ -178,6 +181,26 @@ class MVVMConfigurable(project: Project) : SearchableConfigurable {
                     }
                 })
             }.showDialog()
+        }
+        ui.btSelectBeanPath.addActionListener {
+            val chooser = PackageChooserDialog("选择新增Bean类所在包", project)
+            chooser.selectPackage(ui.textFieldBeanPath.text)
+            if (chooser.showAndGet()) {
+                val mPackage = chooser.selectedPackage
+                if (mPackage != null) {
+                    ui.textFieldBeanPath.text = mPackage.qualifiedName
+                }
+            }
+        }
+        ui.btSelectRetrofit.addActionListener {
+//            val chooser = TreeClassChooserFactory.getInstance(project)
+//                    .createFileChooser("选择新增Retrofit接口类所在类", null, null, {
+//                        it.name.endsWith(".kt")
+//                    }, false, false)
+//            chooser.showDialog()
+            val chooser=FileChooser.
+            ui.textFieldRetrofitPath.text = chooser.selectedFile?.virtualFile?.path
+
         }
     }
 

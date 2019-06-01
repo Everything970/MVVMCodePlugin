@@ -94,6 +94,24 @@ object Utils {
         }
     }
 
+    fun deleteActivityCode(name: String): Boolean = deleteCode("${TemplateCode.TYPE_ACTIVITY}/$name.txt")
+    fun deleteViewModelCode(name: String): Boolean = deleteCode("${TemplateCode.TYPE_VIEW_MODEL}/$name.txt")
+    fun deleteLayoutCode(name: String): Boolean = deleteCode("${TemplateCode.TYPE_LAYOUT}/$name.txt")
+
+    fun deleteCode(name: String): Boolean {
+        val file = File(getPluginPath(), name)
+        return if (!file.exists()) {
+            true
+        } else {
+            try {
+                file.delete()
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+    }
+
     fun getLowerActivityName(activityName: String): String {
         val lowerName = StringBuffer()
         activityName.forEach {
