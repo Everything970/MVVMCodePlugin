@@ -5,14 +5,20 @@ import com.chenan.mvvm.ui.MVVMSettingUI
 import com.chenan.mvvm.ui.WriteCodeDialog
 import com.chenan.mvvm.util.PluginHelper
 import com.chenan.mvvm.util.Utils
+import com.chenan.mvvm.util.pathByProject
+import com.intellij.ide.highlighter.JavaClassFileType
 import com.intellij.ide.util.PackageChooserDialog
 import com.intellij.ide.util.TreeClassChooserFactory
 import com.intellij.openapi.fileChooser.FileChooser
+import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.fileTypes.StdFileTypes
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopupFactory
+import com.intellij.psi.PsiDocumentManager
+import java.util.regex.Pattern
+import javax.rmi.CORBA.Util
 import javax.swing.JCheckBox
 import javax.swing.JComponent
 
@@ -193,14 +199,24 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
             }
         }
         ui.btSelectRetrofit.addActionListener {
-//            val chooser = TreeClassChooserFactory.getInstance(project)
-//                    .createFileChooser("选择新增Retrofit接口类所在类", null, null, {
-//                        it.name.endsWith(".kt")
-//                    }, false, false)
-//            chooser.showDialog()
-            val chooser=FileChooser.
-            ui.textFieldRetrofitPath.text = chooser.selectedFile?.virtualFile?.path
-
+            val chooser = TreeClassChooserFactory.getInstance(project).createFileChooser("选择Retrofit接口类所在包", null, null, {
+                it.name.endsWith(".kt")
+            }, true, false)
+            chooser.showDialog()
+            chooser.selectedFile?.let { psiFile ->
+                println(psiFile.name)
+                ui.textFieldRetrofitPath.text = psiFile.pathByProject
+                PsiDocumentManager.getInstance(project).getDocument(psiFile)?.let { document ->
+                    val p = Pattern.compile("(interface\\s\\w*)")
+                    p.matcher(document.text)?.let { matcher ->
+                        while (matcher.find()) {
+                            ui.comboBoxInterface.addItem(matcher.group(1).let {
+                                "$it（line${document.getLineNumber(document.text.indexOf(it)) + 1}）"
+                            })
+                        }
+                    }
+                }
+            }
         }
     }
 
