@@ -3,10 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="66d16110-462f-4f34-87bc-b4ae7cf3c37e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/MVVMCodePlugin/com/chenan/mvvm/util/Utils.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MVVMCodePlugin/com/chenan/mvvm/util/Utils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MVVMCodePlugin/META-INF/MVVMCodePlugin.kotlin_module" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MVVMCodePlugin/META-INF/MVVMCodePlugin.kotlin_module" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/MVVMCodePlugin/com/chenan/mvvm/test/TestMainKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/MVVMCodePlugin/com/chenan/mvvm/test/TestMainKt.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/chenan/mvvm/setting/MVVMConfigurable.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/chenan/mvvm/setting/MVVMConfigurable.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/chenan/mvvm/test/TestMain.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/chenan/mvvm/test/TestMain.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/chenan/mvvm/util/Extension.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/chenan/mvvm/util/Extension.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/chenan/mvvm/ui/MVVMSettingUI.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/chenan/mvvm/ui/MVVMSettingUI.form" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,26 +23,26 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/setting/MVVMConfigurable.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="196" column="70" selection-start-line="196" selection-start-column="70" selection-end-line="196" selection-end-column="70" />
+            <state relative-caret-position="-600">
+              <caret line="80" column="56" lean-forward="true" selection-start-line="80" selection-start-column="56" selection-end-line="81" selection-end-column="67" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/util/Extension.kt">
+        <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/openapi/vfs/VirtualFileManager.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="4" column="25" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="25" />
+            <state relative-caret-position="203">
+              <caret line="51" column="31" selection-start-line="51" selection-start-column="20" selection-end-line="51" selection-end-column="31" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/ui/MVVMSettingUI.java">
+        <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-impl.jar!/com/intellij/util/xml/PsiPackageConverter.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+            <state relative-caret-position="150">
+              <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -53,37 +53,51 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-api.jar!/com/intellij/ide/util/TreeClassChooserFactory.class">
+        <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-impl.jar!/com/intellij/ide/util/PackageChooserDialog.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="407">
-              <caret line="59" selection-start-line="59" selection-end-line="59" />
+            <state relative-caret-position="425">
+              <caret line="117" column="52" selection-start-line="117" selection-start-column="42" selection-end-line="117" selection-end-column="52" />
+              <folding>
+                <element signature="e#4306#5340#0" expanded="true" />
+                <element signature="e#5339#5340#0" expanded="true" />
+                <element signature="e#9856#9857#0" expanded="true" />
+                <element signature="e#9935#9936#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/test/TestMain.kt">
+        <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-impl.jar!/com/intellij/ui/TreeSpeedSearch.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="335">
-              <caret line="20" column="3" lean-forward="true" selection-start-line="20" selection-start-column="3" selection-end-line="26" selection-end-column="29" />
+            <state relative-caret-position="306">
+              <caret line="46" column="11" selection-start-line="46" selection-start-column="11" selection-end-line="46" selection-end-column="11" />
+              <folding>
+                <element signature="e#1851#1852#0" expanded="true" />
+                <element signature="e#1894#1895#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/openapi/fileTypes/FileType.class">
+        <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/javax/swing/JTree.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="13" selection-start-line="13" selection-end-line="13" />
+            <state relative-caret-position="306">
+              <caret line="1837" column="36" selection-start-line="1837" selection-start-column="20" selection-end-line="1837" selection-end-column="36" />
+              <folding>
+                <element signature="e#65432#65433#0" expanded="true" />
+                <element signature="e#65493#65494#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-impl.jar!/com/intellij/ide/highlighter/JavaClassFileType.class">
+        <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/openapi/ui/DialogWrapper.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-643">
-              <caret line="15" column="62" selection-start-line="15" selection-start-column="62" selection-end-line="15" selection-end-column="62" />
+            <state relative-caret-position="631">
+              <caret line="1302" lean-forward="true" selection-start-line="1302" selection-end-line="1302" />
             </state>
           </provider>
         </entry>
@@ -91,8 +105,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/action/CreateViewCodeAction.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-425">
-              <caret line="92" column="34" selection-start-line="75" selection-start-column="18" selection-end-line="92" selection-end-column="34" />
+            <state relative-caret-position="1468">
+              <caret line="74" column="44" lean-forward="true" selection-start-line="74" selection-start-column="44" selection-end-line="74" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -166,14 +180,14 @@
         <option value="$PROJECT_DIR$/resources/META-INF/plugin.xml" />
         <option value="$PROJECT_DIR$/src/com/chenan/mvvm/ui/SettingUI.form" />
         <option value="$PROJECT_DIR$/src/com/chenan/mvvm/ui/MVVMSettingUI.java" />
-        <option value="$PROJECT_DIR$/src/com/chenan/mvvm/ui/MVVMSettingUI.form" />
-        <option value="$PROJECT_DIR$/src/com/chenan/mvvm/setting/MVVMStateComponent.kt" />
         <option value="$PROJECT_DIR$/src/com/chenan/mvvm/ui/WriteCodeDialog.java" />
         <option value="$PROJECT_DIR$/src/com/chenan/mvvm/util/PluginHelper.kt" />
         <option value="$PROJECT_DIR$/src/com/chenan/mvvm/util/Utils.kt" />
         <option value="$PROJECT_DIR$/src/com/chenan/mvvm/test/TestMain.kt" />
         <option value="$PROJECT_DIR$/src/com/chenan/mvvm/util/Extension.kt" />
+        <option value="$PROJECT_DIR$/src/com/chenan/mvvm/setting/MVVMStateComponent.kt" />
         <option value="$PROJECT_DIR$/src/com/chenan/mvvm/setting/MVVMConfigurable.kt" />
+        <option value="$PROJECT_DIR$/src/com/chenan/mvvm/ui/MVVMSettingUI.form" />
       </list>
     </option>
   </component>
@@ -196,6 +210,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -291,7 +306,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -393,6 +407,14 @@
       <option name="presentableId" value="Default" />
       <updated>1558920756963</updated>
     </task>
+    <task id="LOCAL-00001" summary="test....0.0.2">
+      <created>1559544747553</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1559544747554</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -404,7 +426,7 @@
       <window_info id="Capture Tool" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Image Layers" order="4" />
-      <window_info content_ui="combo" id="Project" order="5" visible="true" weight="0.18697916" />
+      <window_info active="true" content_ui="combo" id="Project" order="5" visible="true" weight="0.18697916" />
       <window_info id="Structure" order="6" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="0" />
       <window_info anchor="bottom" id="Event Log" order="1" side_tool="true" />
@@ -412,7 +434,7 @@
       <window_info anchor="bottom" id="Version Control" order="3" />
       <window_info anchor="bottom" id="Message" order="4" />
       <window_info anchor="bottom" id="Find" order="5" weight="0.32944915" />
-      <window_info active="true" anchor="bottom" id="Run" order="6" visible="true" weight="0.3273305" />
+      <window_info anchor="bottom" id="Run" order="6" weight="0.3273305" />
       <window_info anchor="bottom" id="Debug" order="7" weight="0.3993644" />
       <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
@@ -427,72 +449,11 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="7" weight="0.25" />
     </layout>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="test....0.0.2" />
+    <option name="LAST_COMMIT_MESSAGE" value="test....0.0.2" />
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/action/MakeBeanCodeAction.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="30" column="37" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/psi/PsiDirectory.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/ui/WriteCodeDialog.form">
-      <provider selected="true" editor-type-id="ui-designer" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/setting/PluginSettingEditor.kt" />
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/execution/configurations/ModuleBasedConfiguration.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="29" column="101" selection-start-line="29" selection-start-column="100" selection-end-line="29" selection-end-column="101" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/execution/configurations/LocatableConfigurationBase.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-859">
-          <caret line="13" column="50" selection-start-line="13" selection-start-column="49" selection-end-line="13" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/setting/PluginRunConfiguration.kt" />
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/execution/configurations/RunConfiguration.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="87" lean-forward="true" selection-start-line="87" selection-end-line="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/util/BeanCodeHelper.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="559">
-          <caret line="95" column="9" lean-forward="true" selection-start-line="95" selection-start-column="9" selection-end-line="95" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/execution/configurations/RunConfigurationBase.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="97" column="38" selection-start-line="97" selection-start-column="38" selection-end-line="97" selection-end-column="38" />
-          <folding>
-            <element signature="e#3356#3357#0" expanded="true" />
-            <element signature="e#3393#3394#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/jdom.jar!/org/jdom/Attribute.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5000">
-          <caret line="236" column="19" selection-start-line="236" selection-start-column="19" selection-end-line="236" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/openapi/options/ConfigurationException.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
@@ -620,13 +581,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/setting/MVVMStateComponent.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1025">
-          <caret line="45" column="5" selection-start-line="45" selection-start-column="5" selection-end-line="45" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/openapi/ui/popup/JBPopupFactory.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -675,38 +629,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-impl.jar!/com/intellij/ide/highlighter/JavaClassFileType.class">
+    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/util/Extension.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-643">
-          <caret line="15" column="62" selection-start-line="15" selection-start-column="62" selection-end-line="15" selection-end-column="62" />
+        <state relative-caret-position="100">
+          <caret line="4" column="25" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/action/CreateBeanCodeAction.kt">
+    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/setting/MVVMStateComponent.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
+        <state relative-caret-position="550">
+          <caret line="26" column="65" selection-start-line="26" selection-start-column="65" selection-end-line="26" selection-end-column="65" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/ui/MVVMSettingUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
+        <state relative-caret-position="425">
           <caret line="17" column="21" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-api.jar!/com/intellij/ide/util/TreeClassChooserFactory.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="407">
-          <caret line="59" selection-start-line="59" selection-end-line="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/test/TestMain.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="20" column="3" lean-forward="true" selection-start-line="20" selection-start-column="3" selection-end-line="26" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -717,27 +657,139 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-impl.jar!/com/intellij/psi/impl/migration/MigrationPackageImpl.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-api.jar!/com/intellij/ide/util/TreeClassChooserFactory.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="816">
+          <caret line="59" selection-start-line="59" selection-end-line="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/test/TestMain.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="20" column="3" selection-start-line="20" selection-start-column="3" selection-end-line="26" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-impl.jar!/com/intellij/ide/highlighter/JavaClassFileType.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="15" column="62" selection-start-line="15" selection-start-column="62" selection-end-line="15" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-impl.jar!/com/intellij/psi/impl/file/PsiPackageBase.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="45" column="49" selection-start-line="45" selection-start-column="38" selection-end-line="45" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-impl.jar!/com/intellij/psi/impl/file/PsiPackageImpl.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5925">
+          <caret line="113" column="40" selection-start-line="113" selection-start-column="29" selection-end-line="113" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-api.jar!/com/intellij/psi/PsiPackage.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/psi/PsiDirectory.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="20" column="11" selection-start-line="20" selection-start-column="11" selection-end-line="20" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/openapi/ui/DialogWrapper.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="631">
+          <caret line="1302" lean-forward="true" selection-start-line="1302" selection-end-line="1302" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-impl.jar!/com/intellij/ui/TreeSpeedSearch.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="46" column="11" selection-start-line="46" selection-start-column="11" selection-end-line="46" selection-end-column="11" />
+          <folding>
+            <element signature="e#1851#1852#0" expanded="true" />
+            <element signature="e#1894#1895#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/javax/swing/JTree.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="1837" column="36" selection-start-line="1837" selection-start-column="20" selection-end-line="1837" selection-end-column="36" />
+          <folding>
+            <element signature="e#65432#65433#0" expanded="true" />
+            <element signature="e#65493#65494#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-impl.jar!/com/intellij/ide/util/PackageChooserDialog.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="117" column="52" selection-start-line="117" selection-start-column="42" selection-end-line="117" selection-end-column="52" />
+          <folding>
+            <element signature="e#4306#5340#0" expanded="true" />
+            <element signature="e#5339#5340#0" expanded="true" />
+            <element signature="e#9856#9857#0" expanded="true" />
+            <element signature="e#9935#9936#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/java-impl.jar!/com/intellij/util/xml/PsiPackageConverter.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-api.jar!/com/intellij/openapi/vfs/VirtualFileManager.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="203">
+          <caret line="51" column="31" selection-start-line="51" selection-start-column="20" selection-end-line="51" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/action/CreateBeanCodeAction.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/action/CreateViewCodeAction.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-425">
-          <caret line="92" column="34" selection-start-line="75" selection-start-column="18" selection-end-line="92" selection-end-column="34" />
+        <state relative-caret-position="1468">
+          <caret line="74" column="44" lean-forward="true" selection-start-line="74" selection-start-column="44" selection-end-line="74" selection-end-column="44" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/ui/MVVMSettingUI.form">
       <provider selected="true" editor-type-id="ui-designer" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/util/Extension.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="4" column="25" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/chenan/mvvm/setting/MVVMConfigurable.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="196" column="70" selection-start-line="196" selection-start-column="70" selection-end-line="196" selection-end-column="70" />
+        <state relative-caret-position="-600">
+          <caret line="80" column="56" lean-forward="true" selection-start-line="80" selection-start-column="56" selection-end-line="81" selection-end-column="67" />
         </state>
       </provider>
     </entry>

@@ -15,8 +15,17 @@ import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.fileTypes.StdFileTypes
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.DialogBuilder
 import com.intellij.openapi.ui.popup.JBPopupFactory
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiManager
+import com.intellij.psi.PsiPackage
+import com.intellij.psi.impl.file.PsiPackageImpl
+import com.intellij.psi.search.FilenameIndex
+import com.intellij.util.xml.PsiPackageConverter
 import java.util.regex.Pattern
 import javax.rmi.CORBA.Util
 import javax.swing.JCheckBox
@@ -27,6 +36,7 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
     private val helper = PluginHelper.getInstance(project)
     private val setting = MVVMStateComponent.getInstance(project)
     private val ui = MVVMSettingUI()
+    private var selectedRetrofitPath: String = ""
 
 
     override fun getId(): String {
@@ -40,7 +50,6 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
     override fun reset() {
         helper.activityList.forEach {
             ui.comboBoxActivity.addItem(it.nameWithoutExtension)
-            println("a:${it.name} ${it.nameWithoutExtension}")
         }
         helper.viewModelList.forEach { ui.comboBoxViewModel.addItem(it.nameWithoutExtension) }
         helper.layoutList.forEach { ui.comboBoxLayout.addItem(it.nameWithoutExtension) }
@@ -68,18 +77,66 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
         ui.checkBoxRetrofit.isSelected = setting.isOpen
         ui.jPanelBean.isVisible = setting.isOpen
         ui.jPanelRetrofit.isVisible = setting.isOpen
+        if (setting.isOpen) {
+            ui.textFieldBeanPath.text = setting.beanPath
+            println("setting.retrofitPath:${setting.retrofitPath}")
+            if (setting.retrofitPath.isNotEmpty())
+                VirtualFileManager.getInstance().findFileByUrl(setting.retrofitPath)?.let { virtualFile ->
+                    PsiManager.getInstance(project).findFile(virtualFile)?.let { psiFile ->
+                        ui.textFieldRetrofitPath.text = psiFile.pathByProject
+                        PsiDocumentManager.getInstance(project).getDocument(psiFile)?.let { document ->
+                            val p = Pattern.compile("(interface\\s\\w*)")
+                            p.matcher(document.text)?.let { matcher ->
+                                while (matcher.find()) {
+                                    ui.comboBoxInterface.addItem(matcher.group(1))
+                                }
+                            }
+                            if (setting.retrofitInterface.isNotEmpty())
+                                ui.comboBoxInterface.selectedItem = setting.retrofitInterface
+                        }
+                    }
+                }
+        }
+
     }
 
+    @Throws(NullPointerException::class)
     override fun apply() {
         setting.activity = ui.comboBoxActivity.selectedItem.toString()
         setting.viewModel = ui.comboBoxViewModel.selectedItem.toString()
         setting.layout = ui.comboBoxLayout.selectedItem.toString()
         setting.isOpen = ui.checkBoxRetrofit.isSelected
+        if (ui.checkBoxRetrofit.isSelected) {
+            when {
+                ui.textFieldBeanPath.text.isNullOrEmpty() -> {
+                    Utils.showError("Bean类路径不能为空")
+                    throw NullPointerException("Bean类路径不能为空")
+                }
+                selectedRetrofitPath.isNullOrEmpty() -> {
+                    Utils.showError("Retrofit路径不能为空")
+                    throw NullPointerException("Bean类路径不能为空")
+                }
+                ui.comboBoxInterface.selectedItem == null -> {
+                    Utils.showError("Retrofit interface不能为空")
+                    throw NullPointerException("Bean类路径不能为空")
+                }
+                else -> {
+                    setting.beanPath = ui.textFieldBeanPath.text
+                    setting.retrofitPath = selectedRetrofitPath
+                    setting.retrofitInterface = ui.comboBoxInterface.selectedItem.toString()
+                }
+            }
+        } else {
+            setting.beanPath = ""
+            setting.retrofitPath = ""
+            setting.retrofitInterface = ""
+        }
     }
 
     override fun isModified(): Boolean {
         return ui.comboBoxActivity.selectedItem != setting.activity || ui.comboBoxViewModel.selectedItem != setting.viewModel || ui.comboBoxLayout.selectedItem != setting.layout
-                || ui.checkBoxRetrofit.isSelected != setting.isOpen
+                || ui.checkBoxRetrofit.isSelected != setting.isOpen || ui.textFieldBeanPath.text != setting.beanPath || selectedRetrofitPath != setting.retrofitPath
+                || ui.comboBoxInterface.selectedItem != setting.retrofitInterface
     }
 
     override fun createComponent(): JComponent? {
@@ -206,13 +263,13 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
             chooser.selectedFile?.let { psiFile ->
                 println(psiFile.name)
                 ui.textFieldRetrofitPath.text = psiFile.pathByProject
+                selectedRetrofitPath = psiFile.virtualFile.url
+                ui.comboBoxInterface.removeAll()
                 PsiDocumentManager.getInstance(project).getDocument(psiFile)?.let { document ->
                     val p = Pattern.compile("(interface\\s\\w*)")
                     p.matcher(document.text)?.let { matcher ->
                         while (matcher.find()) {
-                            ui.comboBoxInterface.addItem(matcher.group(1).let {
-                                "$it（line${document.getLineNumber(document.text.indexOf(it)) + 1}）"
-                            })
+                            ui.comboBoxInterface.addItem(matcher.group(1))
                         }
                     }
                 }
