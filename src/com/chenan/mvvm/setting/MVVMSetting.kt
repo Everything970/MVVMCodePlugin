@@ -1,12 +1,13 @@
 package com.chenan.mvvm.setting
 
+import com.chenan.mvvm.code.TemplateCode
 import com.chenan.mvvm.util.Utils
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import org.jdom.Element
 
-class MVVMStateComponent : PersistentStateComponent<Element> {
+class MVVMSetting : PersistentStateComponent<Element> {
 
     var activity: String = Utils.defaultActivity
     var viewModel: String = Utils.defaultViewModel
@@ -15,9 +16,10 @@ class MVVMStateComponent : PersistentStateComponent<Element> {
     var beanPath: String = ""
     var retrofitPath: String = ""
     var retrofitInterface: String = ""
+    var interfaceFunCode: String = TemplateCode.interfaceFunCode
 
     override fun getState(): Element? {
-        return Element("MVVMStateComponent").apply {
+        return Element("MVVMSetting").apply {
             setAttribute("activity", activity)
             setAttribute("view_model", viewModel)
             setAttribute("layout", layout)
@@ -40,8 +42,8 @@ class MVVMStateComponent : PersistentStateComponent<Element> {
 
     companion object {
         @JvmStatic
-        fun getInstance(project: Project): MVVMStateComponent {
-            return ServiceManager.getService(project,MVVMStateComponent::class.java)
+        fun getInstance(project: Project): MVVMSetting {
+            return ServiceManager.getService(project, MVVMSetting::class.java)
         }
     }
 }

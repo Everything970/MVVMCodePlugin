@@ -1,6 +1,6 @@
 package com.chenan.mvvm.ui;
 
-import com.chenan.mvvm.setting.MVVMStateComponent;
+import com.chenan.mvvm.setting.MVVMSetting;
 import com.chenan.mvvm.util.Utils;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -23,14 +23,14 @@ public class CreateCodeDialog extends JDialog {
     private JButton btLayout;
     private JComboBox<String> boxLayout;
 
-    private MVVMStateComponent config;
+    private MVVMSetting config;
     private List<File> activities;
     private List<File> viewModels;
     private List<File> layouts;
     private OnClickListener listener;
 
     public CreateCodeDialog(Project project) {
-        config = MVVMStateComponent.getInstance(project);
+        config = MVVMSetting.getInstance(project);
         activities = Utils.getActivityFiles();
         viewModels = Utils.getViewModelFiles();
         layouts = Utils.getLayoutFiles();

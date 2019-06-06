@@ -27,8 +27,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <projectConfigurable groupId="tools" displayName="代码（MVVM）生成设置" id="setting.MVVMConfigurable"
                              instance="com.chenan.mvvm.setting.MVVMConfigurable"/>
-        <projectService serviceInterface="com.chenan.mvvm.setting.MVVMStateComponent"
-                        serviceImplementation="com.chenan.mvvm.setting.MVVMStateComponent"/>
+        <projectService serviceInterface="com.chenan.mvvm.setting.MVVMSetting"
+                        serviceImplementation="com.chenan.mvvm.setting.MVVMSetting"/>
     </extensions>
 
     <actions>
@@ -47,6 +47,11 @@
                 text="Json Kotlin Class"
                 description="user json to create code of bean">
             <add-to-group group-id="NewGroup" anchor="after" relative-to-action="Kotlin.NewFile"/>
+        </action>
+        <action id="pulgin.CreateURLAction" class="com.chenan.mvvm.action.CreateURLAction" text="添加接口方法（Beta）"
+                description="add interface of Retrofit by Kotlin">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="shift alt R"/>
         </action>
     </actions>
 

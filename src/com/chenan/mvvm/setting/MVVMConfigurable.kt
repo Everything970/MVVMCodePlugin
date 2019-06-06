@@ -6,35 +6,22 @@ import com.chenan.mvvm.ui.WriteCodeDialog
 import com.chenan.mvvm.util.PluginHelper
 import com.chenan.mvvm.util.Utils
 import com.chenan.mvvm.util.pathByProject
-import com.intellij.ide.highlighter.JavaClassFileType
 import com.intellij.ide.util.PackageChooserDialog
 import com.intellij.ide.util.TreeClassChooserFactory
-import com.intellij.openapi.fileChooser.FileChooser
-import com.intellij.openapi.fileChooser.FileChooserDescriptor
-import com.intellij.openapi.fileTypes.FileType
-import com.intellij.openapi.fileTypes.StdFileTypes
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.DialogBuilder
 import com.intellij.openapi.ui.popup.JBPopupFactory
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
-import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
-import com.intellij.psi.PsiPackage
-import com.intellij.psi.impl.file.PsiPackageImpl
-import com.intellij.psi.search.FilenameIndex
-import com.intellij.util.xml.PsiPackageConverter
 import java.util.regex.Pattern
-import javax.rmi.CORBA.Util
 import javax.swing.JCheckBox
 import javax.swing.JComponent
 
 class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
 
     private val helper = PluginHelper.getInstance(project)
-    private val setting = MVVMStateComponent.getInstance(project)
+    private val setting = MVVMSetting.getInstance(project)
     private val ui = MVVMSettingUI()
     private var selectedRetrofitPath: String = ""
 

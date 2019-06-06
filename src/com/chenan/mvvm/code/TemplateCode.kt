@@ -4,6 +4,10 @@ object TemplateCode {
     const val packageName = "#packageName"
     const val activityName = "#activityName"
     const val lowerActivityName = "#lowerActivityName"
+    const val javadoc = "#javadoc"
+    const val funName = "#funName"
+    const val requestParameter = "#requestParameter"
+    const val resultBean = "#resultBean"
     const val TYPE_VIEW_MODEL = "viewmodel"
     const val TYPE_ACTIVITY = "activity"
     const val TYPE_LAYOUT = "layout"
@@ -49,7 +53,7 @@ object TemplateCode {
             "    }\n" +
             "}"
 
-    const val layoutCode="<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+    const val layoutCode = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
             "<layout\n" +
             "        xmlns:android=\"http://schemas.android.com/apk/res/android\"\n" +
             "        xmlns:tools=\"http://schemas.android.com/tools\"\n" +
@@ -66,4 +70,9 @@ object TemplateCode {
             "    \n" +
             "    </androidx.constraintlayout.widget.ConstraintLayout>\n" +
             "</layout>"
+
+    const val interfaceFunCode = "#javadoc\n" +
+            "@FormUrlEncoded\n" +
+            "@Post\n" +
+            "fun #funName(#requestParameter):Call<BaseEntity<#resultBean>>\n"
 }

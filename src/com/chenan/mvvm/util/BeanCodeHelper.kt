@@ -3,21 +3,21 @@ package com.chenan.mvvm.util
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import java.net.CacheRequest
 
 class BeanCodeHelper {
-    private val dependencyList = arrayListOf<String>()
-    private val innerList = arrayListOf<Pair<String, JsonObject>>()
-
     fun getBeanString(json: String, packageName: String, beanName: String): String {
-        dependencyList.clear()
-        innerList.clear()
+
+        val dependencyList = arrayListOf<String>()
+        val innerList = arrayListOf<Pair<String, JsonObject>>()
+
         val jsonObject = Gson().fromJson<JsonObject>(json, JsonObject::class.java)
         val sb = StringBuffer()
         sb.append("package $packageName").append('\n')
                 .append("#dependencyClass").append('\n')
                 .append("class $beanName {").append('\n')
         jsonObject.keySet().forEach { key ->
-            val type = getType(jsonObject.get(key), key)
+            val type = getType(jsonObject.get(key), key, innerList)
             if (type.flag == 0) {
                 sb.append("\t//")
             } else {
@@ -34,7 +34,7 @@ class BeanCodeHelper {
                 val c = StringBuffer()
                 c.append("class ${it.first}{").append('\n')
                 it.second.keySet().forEach { key ->
-                    val type = getType(it.second.get(key), key)
+                    val type = getType(it.second.get(key), key, innerList)
                     if (type.flag == 0) {
                         c.append("\t//")
                     } else {
@@ -48,7 +48,34 @@ class BeanCodeHelper {
         }
     }
 
-    fun getType(jsonElement: JsonElement, key: String): Type {
+    fun getFunCode(requestJson: String, resultJson: String): String {
+        val sb = StringBuffer()
+
+        return sb.toString()
+    }
+
+    fun getFieldContent(json: String): String {
+        return try {
+            val innerList = arrayListOf<Pair<String, JsonObject>>()
+            val jsonObject = Gson().fromJson<JsonObject>(json, JsonObject::class.java)
+            val sb = StringBuffer()
+            sb.append("\n")
+            jsonObject.keySet().forEach { key ->
+                val type = getType(jsonObject.get(key), key, innerList)
+                if (type.flag == 3) {
+                    sb.append("\t")
+                } else {
+                    sb.append("\t//")
+                }
+                sb.append("@Field(\"$key\") $key: ${type.name},").append('\n')
+            }
+            sb.toString()
+        } catch (e: Exception) {
+            "Error"
+        }
+    }
+
+    fun getType(jsonElement: JsonElement, key: String, innerList: ArrayList<Pair<String, JsonObject>>): Type {
         return when {
             jsonElement.isJsonNull -> {
                 return Type()
@@ -62,7 +89,7 @@ class BeanCodeHelper {
             }
             jsonElement.isJsonArray -> {
                 val je = jsonElement.asJsonArray[0]
-                val type = getType(je, key)
+                val type = getType(je, key, innerList)
                 return Type(2, "List<${type.name}>", "listOf()")
             }
             jsonElement.isJsonPrimitive -> {
