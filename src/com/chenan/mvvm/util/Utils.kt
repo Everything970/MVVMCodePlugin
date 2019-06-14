@@ -135,6 +135,7 @@ object Utils {
         DialogBuilder().apply {
             setTitle("提示")
             setErrorText(error)
+            addOkAction()
         }.show()
     }
 }

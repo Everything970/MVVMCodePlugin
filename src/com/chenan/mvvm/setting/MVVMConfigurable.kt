@@ -21,7 +21,7 @@ import javax.swing.JComponent
 class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
 
     private val helper = PluginHelper.getInstance(project)
-    private val setting = MVVMSetting.getInstance(project)
+    private val setting = helper.setting
     private val ui = MVVMSettingUI()
     private var selectedRetrofitPath: String = ""
 
@@ -35,26 +35,26 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
     }
 
     override fun reset() {
-        helper.activityList.forEach {
-            ui.comboBoxActivity.addItem(it.nameWithoutExtension)
+        helper.activitySet.forEach {
+            ui.comboBoxActivity.addItem(it)
         }
-        helper.viewModelList.forEach { ui.comboBoxViewModel.addItem(it.nameWithoutExtension) }
-        helper.layoutList.forEach { ui.comboBoxLayout.addItem(it.nameWithoutExtension) }
-        helper.activityList.indexOfFirst { it.nameWithoutExtension == setting.activity }.let {
+        helper.viewModelSet.forEach { ui.comboBoxViewModel.addItem(it) }
+        helper.layoutSet.forEach { ui.comboBoxLayout.addItem(it) }
+        helper.activitySet.indexOfFirst { it == setting.activity }.let {
             if (it >= 0) {
                 ui.comboBoxActivity.selectedIndex = it
             } else {
                 setting.activity = ui.comboBoxActivity.selectedItem.toString()
             }
         }
-        helper.viewModelList.indexOfFirst { it.nameWithoutExtension == setting.viewModel }.let {
+        helper.viewModelSet.indexOfFirst { it == setting.viewModel }.let {
             if (it >= 0) {
                 ui.comboBoxViewModel.selectedIndex = it
             } else {
                 setting.viewModel = ui.comboBoxViewModel.selectedItem.toString()
             }
         }
-        helper.layoutList.indexOfFirst { it.nameWithoutExtension == setting.layout }.let {
+        helper.layoutSet.indexOfFirst { it == setting.layout }.let {
             if (it >= 0) {
                 ui.comboBoxLayout.selectedIndex = it
             } else {
@@ -64,26 +64,24 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
         ui.checkBoxRetrofit.isSelected = setting.isOpen
         ui.jPanelBean.isVisible = setting.isOpen
         ui.jPanelRetrofit.isVisible = setting.isOpen
-        if (setting.isOpen) {
-            ui.textFieldBeanPath.text = setting.beanPath
-            println("setting.retrofitPath:${setting.retrofitPath}")
-            if (setting.retrofitPath.isNotEmpty())
-                VirtualFileManager.getInstance().findFileByUrl(setting.retrofitPath)?.let { virtualFile ->
-                    PsiManager.getInstance(project).findFile(virtualFile)?.let { psiFile ->
-                        ui.textFieldRetrofitPath.text = psiFile.pathByProject
-                        PsiDocumentManager.getInstance(project).getDocument(psiFile)?.let { document ->
-                            val p = Pattern.compile("(interface\\s\\w*)")
-                            p.matcher(document.text)?.let { matcher ->
-                                while (matcher.find()) {
-                                    ui.comboBoxInterface.addItem(matcher.group(1))
-                                }
+        ui.textAreaFunCode.text = setting.interfaceFunCode
+        ui.textFieldBeanPath.text = setting.beanPath
+        if (setting.retrofitPath.isNotEmpty())
+            VirtualFileManager.getInstance().findFileByUrl(setting.retrofitPath)?.let { virtualFile ->
+                PsiManager.getInstance(project).findFile(virtualFile)?.let { psiFile ->
+                    ui.textFieldRetrofitPath.text = psiFile.pathByProject
+                    PsiDocumentManager.getInstance(project).getDocument(psiFile)?.let { document ->
+                        val p = Pattern.compile("(interface\\s\\w*)")
+                        p.matcher(document.text)?.let { matcher ->
+                            while (matcher.find()) {
+                                ui.comboBoxInterface.addItem(matcher.group(1))
                             }
-                            if (setting.retrofitInterface.isNotEmpty())
-                                ui.comboBoxInterface.selectedItem = setting.retrofitInterface
                         }
+                        if (setting.retrofitInterface.isNotEmpty())
+                            ui.comboBoxInterface.selectedItem = setting.retrofitInterface
                     }
                 }
-        }
+            }
 
     }
 
@@ -101,16 +99,21 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
                 }
                 selectedRetrofitPath.isNullOrEmpty() -> {
                     Utils.showError("Retrofit路径不能为空")
-                    throw NullPointerException("Bean类路径不能为空")
+                    throw NullPointerException("Retrofit路径不能为空")
                 }
                 ui.comboBoxInterface.selectedItem == null -> {
                     Utils.showError("Retrofit interface不能为空")
-                    throw NullPointerException("Bean类路径不能为空")
+                    throw NullPointerException("Retrofit interface类路径不能为空")
+                }
+                ui.textAreaFunCode.text.isNullOrEmpty() -> {
+                    Utils.showError("方法模板不能为空")
+                    throw NullPointerException("方法模板不能为空")
                 }
                 else -> {
                     setting.beanPath = ui.textFieldBeanPath.text
                     setting.retrofitPath = selectedRetrofitPath
                     setting.retrofitInterface = ui.comboBoxInterface.selectedItem.toString()
+                    setting.interfaceFunCode = ui.textAreaFunCode.text
                 }
             }
         } else {
@@ -123,7 +126,7 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
     override fun isModified(): Boolean {
         return ui.comboBoxActivity.selectedItem != setting.activity || ui.comboBoxViewModel.selectedItem != setting.viewModel || ui.comboBoxLayout.selectedItem != setting.layout
                 || ui.checkBoxRetrofit.isSelected != setting.isOpen || ui.textFieldBeanPath.text != setting.beanPath || selectedRetrofitPath != setting.retrofitPath
-                || ui.comboBoxInterface.selectedItem != setting.retrofitInterface
+                || ui.comboBoxInterface.selectedItem != setting.retrofitInterface || ui.textAreaFunCode.text != setting.interfaceFunCode
     }
 
     override fun createComponent(): JComponent? {
@@ -132,6 +135,7 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
         ui.jPanelRetrofit.isVisible = false
         ui.textFieldRetrofitPath.isEditable = false
         ui.textFieldBeanPath.isEditable = false
+        ui.panelFunCode.isVisible = false
         setEvent()
         return ui.contentPanel
     }
@@ -141,96 +145,179 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
             (event.source as? JCheckBox)?.also {
                 ui.jPanelBean.isVisible = it.isSelected
                 ui.jPanelRetrofit.isVisible = it.isSelected
+                ui.panelFunCode.isVisible = it.isSelected
             }
         }
         ui.btActivity.addActionListener {
-            val name = ui.comboBoxActivity.selectedItem.toString()
+            val item = ui.comboBoxActivity.selectedItem
+            if (Utils.defaultActivity == item) {
+                Utils.showError("默认模板不可编辑")
+                return@addActionListener
+            }
             WriteCodeDialog().also {
                 it.title = "编辑 Activity"
-                it.setListener(object : WriteCodeDialog.OnClickListener {
-                    override fun onOk(name: String, content: String) {
-                        val txtName = if (name.endsWith(".txt")) name else "$name.txt"
-                        Utils.createCode(Utils.getPluginPath(), TemplateCode.TYPE_ACTIVITY, txtName, content)?.let { file ->
-                            file.nameWithoutExtension.let { item ->
-                                ui.comboBoxActivity.addItem(item)
-                                ui.comboBoxActivity.selectedItem = item
-                            }
-                        } ?: Utils.showError("创建 $txtName.txt 失败")
+                it.setListener { name, content ->
+                    if (name == item) {
+                        setting.activityMap[name] = content
+                        it.dispose()
+                    } else {
+                        if (helper.activitySet.contains(name)) {
+                            Utils.showError("已存在相同命名模板")
+                        } else {
+                            setting.activityMap[name] = content
+                            setting.activityMap.remove(item.toString())
+                            helper.activitySet.add(name)
+                            helper.activitySet.remove(item.toString())
+                            ui.comboBoxActivity.addItem(name)
+                            ui.comboBoxActivity.selectedItem = name
+                            ui.comboBoxActivity.removeItem(item)
+                            it.dispose()
+                        }
                     }
-
-                    override fun onCancel() {
-
-                    }
-                })
-            }.showDialog(name, Utils.getActivityCode(name))
+                }
+            }.showDialog(item.toString(), setting.activityMap[item.toString()])
         }
         ui.btAddActivity.addActionListener {
             WriteCodeDialog().also {
                 it.title = "Activity Code"
-                it.setListener(object : WriteCodeDialog.OnClickListener {
-                    override fun onOk(name: String, content: String) {
-                        val txtName = if (name.endsWith(".txt")) name else "$name.txt"
-                        Utils.createCode(Utils.getPluginPath(), TemplateCode.TYPE_ACTIVITY, txtName, content)?.let { file ->
-                            file.nameWithoutExtension.let { item ->
-                                ui.comboBoxActivity.addItem(item)
-                                ui.comboBoxActivity.selectedItem = item
-                            }
-                        } ?: Utils.showError("创建 $txtName.txt 失败")
+                it.setListener { name, content ->
+                    if (helper.activitySet.contains(name)) {
+                        Utils.showError("已存在相同命名模板")
+                    } else {
+                        setting.activityMap[name] = content
+                        helper.activitySet.add(name)
+                        ui.comboBoxActivity.addItem(name)
+                        ui.comboBoxActivity.selectedItem = name
+                        it.dispose()
                     }
-
-                    override fun onCancel() {
-
-                    }
-                })
-            }.showDialog()
+                }
+            }.showDialog("", TemplateCode.activityCode)
         }
         ui.btDeleteActivity.addActionListener {
-            JBPopupFactory.getInstance().createConfirmation("确认删除${ui.comboBoxActivity.selectedItem}吗？", "确定", "取消", {
-                val item = ui.comboBoxActivity.selectedItem
-                if (Utils.deleteActivityCode(item.toString())) {
-                    ui.comboBoxActivity.removeItem(item)
-                }
+            val item = ui.comboBoxActivity.selectedItem
+            if (Utils.defaultActivity == item) {
+                Utils.showError("默认模板不可删除")
+                return@addActionListener
+            }
+            JBPopupFactory.getInstance().createConfirmation("确认删除${item}吗？", "确定", "取消", {
+                helper.activitySet.remove(item.toString())
+                setting.activityMap.remove(item.toString())
+                ui.comboBoxActivity.removeItem(item)
             }, 0).showInFocusCenter()
+        }
+        ui.btViewModel.addActionListener {
+            val item = ui.comboBoxViewModel.selectedItem
+            if (Utils.defaultViewModel == item) {
+                Utils.showError("默认模板不可编辑")
+                return@addActionListener
+            }
+            WriteCodeDialog().also {
+                it.title = "编辑 ViewModel"
+                it.setListener { name, content ->
+                    if (name == item) {
+                        setting.viewModelMap[name] = content
+                        it.dispose()
+                    } else {
+                        if (helper.viewModelSet.contains(name)) {
+                            Utils.showError("已存在相同命名模板")
+                        } else {
+                            setting.viewModelMap[name] = content
+                            setting.viewModelMap.remove(item.toString())
+                            helper.viewModelSet.add(name)
+                            helper.viewModelSet.remove(item.toString())
+                            ui.comboBoxViewModel.addItem(name)
+                            ui.comboBoxViewModel.selectedItem = name
+                            ui.comboBoxViewModel.removeItem(item)
+                            it.dispose()
+                        }
+                    }
+                }
+            }.showDialog(item.toString(), setting.viewModelMap[item.toString()])
         }
         ui.btAddViewModel.addActionListener {
             WriteCodeDialog().also {
                 it.title = "ViewModel Code"
-                it.setListener(object : WriteCodeDialog.OnClickListener {
-                    override fun onOk(name: String, content: String) {
-                        val txtName = if (name.endsWith(".txt")) name else "$name.txt"
-                        Utils.createCode(Utils.getPluginPath(), TemplateCode.TYPE_VIEW_MODEL, txtName, content)?.let { file ->
-                            file.nameWithoutExtension.let { item ->
-                                ui.comboBoxViewModel.addItem(item)
-                                ui.comboBoxViewModel.selectedItem = item
-                            }
-                        } ?: Utils.showError("创建 $txtName.txt 失败")
+                it.setListener { name, content ->
+                    if (helper.viewModelSet.contains(name)) {
+                        Utils.showError("已存在相同命名模板")
+                    } else {
+                        setting.viewModelMap[name] = content
+                        helper.viewModelSet.add(name)
+                        ui.comboBoxViewModel.addItem(name)
+                        ui.comboBoxViewModel.selectedItem = name
+                        it.dispose()
                     }
-
-                    override fun onCancel() {
-
+                }
+            }.showDialog("", TemplateCode.viewModelCode)
+        }
+        ui.btDeleteViewModel.addActionListener {
+            val item = ui.comboBoxViewModel.selectedItem
+            if (Utils.defaultViewModel == item) {
+                Utils.showError("默认模板不可删除")
+                return@addActionListener
+            }
+            JBPopupFactory.getInstance().createConfirmation("确认删除${item}吗？", "确定", "取消", {
+                helper.viewModelSet.remove(item.toString())
+                setting.viewModelMap.remove(item.toString())
+                ui.comboBoxViewModel.removeItem(item)
+            }, 0).showInFocusCenter()
+        }
+        ui.btLayout.addActionListener {
+            val item = ui.comboBoxLayout.selectedItem
+            if (Utils.defaultLayout == item) {
+                Utils.showError("默认模板不可编辑")
+                return@addActionListener
+            }
+            WriteCodeDialog().also {
+                it.title = "编辑 Layout"
+                it.setListener { name, content ->
+                    if (name == item) {
+                        setting.layoutMap[name] = content
+                        it.dispose()
+                    } else {
+                        if (helper.layoutSet.contains(name)) {
+                            Utils.showError("已存在相同命名模板")
+                        } else {
+                            setting.layoutMap[name] = content
+                            setting.layoutMap.remove(item.toString())
+                            helper.layoutSet.add(name)
+                            helper.layoutSet.remove(item.toString())
+                            ui.comboBoxLayout.addItem(name)
+                            ui.comboBoxLayout.selectedItem = name
+                            ui.comboBoxLayout.removeItem(item)
+                            it.dispose()
+                        }
                     }
-                })
-            }.showDialog()
+                }
+            }.showDialog(item.toString(), setting.layoutMap[item.toString()])
         }
         ui.btAddLayout.addActionListener {
             WriteCodeDialog().also {
                 it.title = "Layout Code"
-                it.setListener(object : WriteCodeDialog.OnClickListener {
-                    override fun onOk(name: String, content: String) {
-                        val txtName = if (name.endsWith(".txt")) name else "$name.txt"
-                        Utils.createCode(Utils.getPluginPath(), TemplateCode.TYPE_LAYOUT, txtName, content)?.let { file ->
-                            file.nameWithoutExtension.let { item ->
-                                ui.comboBoxLayout.addItem(item)
-                                ui.comboBoxLayout.selectedItem = item
-                            }
-                        } ?: Utils.showError("创建 $txtName.txt 失败")
+                it.setListener { name, content ->
+                    if (helper.activitySet.contains(name)) {
+                        Utils.showError("已存在相同命名模板")
+                    } else {
+                        setting.layoutMap[name] = content
+                        helper.layoutSet.add(name)
+                        ui.comboBoxLayout.addItem(name)
+                        ui.comboBoxLayout.selectedItem = name
+                        it.dispose()
                     }
-
-                    override fun onCancel() {
-
-                    }
-                })
-            }.showDialog()
+                }
+            }.showDialog("", TemplateCode.layoutCode)
+        }
+        ui.btDeleteLayout.addActionListener {
+            val item = ui.comboBoxLayout.selectedItem
+            if (Utils.defaultLayout == item) {
+                Utils.showError("默认模板不可删除")
+                return@addActionListener
+            }
+            JBPopupFactory.getInstance().createConfirmation("确认删除${item}吗？", "确定", "取消", {
+                helper.layoutSet.remove(item.toString())
+                setting.layoutMap.remove(item.toString())
+                ui.comboBoxLayout.removeItem(item)
+            }, 0).showInFocusCenter()
         }
         ui.btSelectBeanPath.addActionListener {
             val chooser = PackageChooserDialog("选择新增Bean类所在包", project)

@@ -24,6 +24,6 @@ public class MVVMSettingUI {
     public JButton btSelectRetrofit;
     public JTextField textFieldRetrofitPath;
     public JComboBox comboBoxInterface;
-    private JTextArea textAreaFunCode;
-    private JTextPane textPaneFunHint;
+    public JTextArea textAreaFunCode;
+    public JPanel panelFunCode;
 }

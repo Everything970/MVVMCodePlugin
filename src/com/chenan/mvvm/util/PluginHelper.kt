@@ -1,6 +1,6 @@
 package com.chenan.mvvm.util
 
-import com.intellij.openapi.module.ModuleManager
+import com.chenan.mvvm.setting.MVVMSetting
 import com.intellij.openapi.project.Project
 
 class PluginHelper private constructor(
@@ -15,10 +15,26 @@ class PluginHelper private constructor(
         }
     }
 
-    val activityList = Utils.getActivityFiles()
-    val viewModelList = Utils.getViewModelFiles()
-    val layoutList = Utils.getLayoutFiles()
+    val setting = MVVMSetting.getInstance(project)
 
-    val projectFilePath=project.projectFilePath
-    val modules=ModuleManager.getInstance(project).modules
+    val activitySet: HashSet<String> by lazy {
+        hashSetOf<String>().also {
+            it.add(Utils.defaultActivity)
+            it.addAll(setting.activityMap.keys)
+        }
+    }
+
+    val viewModelSet: HashSet<String> by lazy {
+        hashSetOf<String>().also {
+            it.add(Utils.defaultViewModel)
+            it.addAll(setting.viewModelMap.keys)
+        }
+    }
+
+    val layoutSet: HashSet<String> by lazy {
+        hashSetOf<String>().also {
+            it.add(Utils.defaultViewModel)
+            it.addAll(setting.layoutMap.keys)
+        }
+    }
 }

@@ -39,7 +39,6 @@ public class WriteCodeDialog extends JDialog {
     }
 
     private void onOK() {
-        // add your code here
         String name = textFieldName.getText();
         String content = textAreaCode.getText();
         if (name == null || name.equals("")) {
@@ -50,17 +49,10 @@ public class WriteCodeDialog extends JDialog {
             Utils.showError("请输入模板内容");
             return;
         }
-        if (listener != null) {
-            listener.onOk(name, content);
-        }
-        dispose();
+        listener.onOk(name, content);
     }
 
     private void onCancel() {
-        // add your code here if necessary
-        if (listener != null) {
-            listener.onCancel();
-        }
         dispose();
     }
 
@@ -84,7 +76,5 @@ public class WriteCodeDialog extends JDialog {
 
     public interface OnClickListener {
         void onOk(@NotNull String name, @NotNull String content);
-
-        void onCancel();
     }
 }
