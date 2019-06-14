@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>pers.chenan.code</id>
     <name>MVVMCodePlugin</name>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <vendor email="chenan.970@outlook.com" url="null">ChenAn</vendor>
 
     <description><![CDATA[
@@ -10,7 +10,8 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      No More
+      version 0.0.2 : add create code of Retrofit.\n
+      version 0.0.3 : add select kotlin bean that already exist.\n
       ................................
     ]]>
     </change-notes>

@@ -26,6 +26,12 @@ class MVVMSetting : PersistentStateComponent<Element> {
     var retrofitInterface: String = ""
     var interfaceFunCode: String = TemplateCode.interfaceFunCode
 
+    val activityCode: String?
+        get() = if (activity == Utils.defaultActivity) TemplateCode.activityCode else activityMap[activity]
+    val viewModelCode: String?
+        get() = if (viewModel == Utils.defaultViewModel) TemplateCode.viewModelCode else viewModelMap[viewModel]
+    val layoutCode: String?
+        get() = if (layout == Utils.defaultLayout) TemplateCode.layoutCode else layoutMap[layout]
 
     override fun getState(): Element? {
         return Element("MVVMSetting").apply {

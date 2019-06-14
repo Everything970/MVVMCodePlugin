@@ -10,8 +10,8 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      version 0.0.2 : add create code of Retrofit.
-      version 0.0.3 : add select kotlin bean that already exist.
+      version 0.0.2 : add create code of Retrofit.\n
+      version 0.0.3 : add select kotlin bean that already exist.\n
       ................................
     ]]>
     </change-notes>

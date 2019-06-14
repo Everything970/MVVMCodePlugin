@@ -76,4 +76,6 @@ object TemplateCode {
             "@FormUrlEncoded\n" +
             "@Post(\"#url\")\n" +
             "fun #funName(#requestParameter):Call<BaseEntity<#resultBean>>\n"
+
+    
 }

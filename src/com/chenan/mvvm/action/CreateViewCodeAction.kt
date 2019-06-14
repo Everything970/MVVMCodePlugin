@@ -17,13 +17,9 @@ class CreateViewCodeAction : AnAction() {
         if (!e.presentation.isEnabled) {
             Utils.showError("请确认是否处于编辑Activity（kotlin）文件下")
         }
-        val project = e.getData(PlatformDataKeys.PROJECT)
-        val editor = e.getData(PlatformDataKeys.EDITOR)
-        val psiFile = e.getData(PlatformDataKeys.PSI_FILE)
-        if (project == null || editor == null || psiFile == null) {
-            Utils.showError("转化失败！\nproject:$project editor:$editor psiFile:$psiFile")
-            return
-        }
+        val project = e.getData(PlatformDataKeys.PROJECT)!!
+        val editor = e.getData(PlatformDataKeys.EDITOR)!!
+        val psiFile = e.getData(PlatformDataKeys.PSI_FILE)!!
         val setting = MVVMSetting.getInstance(project)
         if (setting.activity.isEmpty() || setting.viewModel.isEmpty() || setting.layout.isEmpty()) {
             Utils.showError("请先配置activity/viewModel/layout")
@@ -44,7 +40,10 @@ class CreateViewCodeAction : AnAction() {
 
         //create code of activity
         WriteCommandAction.runWriteCommandAction(project) {
-            editor.document.setText(Utils.getCodeContent(Utils.getActivityCode(setting.activity), packageName, activityName))
+            setting.activityCode?.let {
+                editor.document.setText(Utils.getCodeContent(it, packageName, activityName))
+            } ?: Utils.showError("所选activity模板为空")
+
         }
         //create code and file of view model
         (if (hadActivity) psiFile.parent?.parent else psiFile.parent)?.let {
@@ -52,15 +51,20 @@ class CreateViewCodeAction : AnAction() {
                     ?: it.createSubdirectory(TemplateCode.TYPE_VIEW_MODEL)
             val model = viewModel.findFile(activityName + "ViewModel.kt")
                     ?: viewModel.createFile(activityName + "ViewModel.kt")
-            val content = Utils.getCodeContent(Utils.getViewModelCode(setting.viewModel), packageName, activityName)
-            PsiDocumentManager.getInstance(project).getDocument(model)?.setText(content)
+            setting.viewModelCode?.let { code ->
+                Utils.getCodeContent(code, packageName, activityName).let { content ->
+                    PsiDocumentManager.getInstance(project).getDocument(model)?.setText(content)
+                }
+            } ?: Utils.showError("所选ViewModel模板为空")
         }
 
         //change xml
         val xml = FilenameIndex.getFilesByName(project, "activity${Utils.getLowerActivityName(activityName)}.xml", GlobalSearchScope.allScope(project))
         if (xml.isNotEmpty()) {
             val xmlEditor = PsiDocumentManager.getInstance(project).getDocument(xml[0])
-            xmlEditor?.setText(Utils.getCodeContent(Utils.getLayoutCode(setting.layout), packageName, activityName))
+            setting.layoutCode?.let {
+                xmlEditor?.setText(Utils.getCodeContent(it, packageName, activityName))
+            } ?: Utils.showError("所选Layout模板为空")
         }
     }
 
