@@ -13,8 +13,6 @@ class MVVMSetting : PersistentStateComponent<Element> {
     var activity: String = Utils.defaultActivity
     var viewModel: String = Utils.defaultViewModel
     var layout: String = Utils.defaultLayout
-    var activity:
-
     var isOpen: Boolean = false
     var beanPath: String = ""
     var retrofitPath: String = ""
