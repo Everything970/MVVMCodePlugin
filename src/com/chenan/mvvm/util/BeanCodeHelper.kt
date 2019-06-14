@@ -6,6 +6,7 @@ import com.google.gson.JsonObject
 import java.net.CacheRequest
 
 class BeanCodeHelper {
+    @Throws(Exception::class)
     fun getBeanString(json: String, packageName: String, beanName: String): String {
 
         val dependencyList = arrayListOf<String>()
@@ -48,11 +49,6 @@ class BeanCodeHelper {
         }
     }
 
-    fun getFunCode(requestJson: String, resultJson: String): String {
-        val sb = StringBuffer()
-
-        return sb.toString()
-    }
 
     fun getFieldContent(json: String): String {
         return try {
@@ -69,6 +65,7 @@ class BeanCodeHelper {
                 }
                 sb.append("@Field(\"$key\") $key: ${type.name},").append('\n')
             }
+            sb.delete(sb.length - 2, sb.length - 1)
             sb.toString()
         } catch (e: Exception) {
             "Error"

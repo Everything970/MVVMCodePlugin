@@ -8,6 +8,7 @@ object TemplateCode {
     const val funName = "#funName"
     const val requestParameter = "#requestParameter"
     const val resultBean = "#resultBean"
+    const val interfaceURL = "#url"
     const val TYPE_VIEW_MODEL = "viewmodel"
     const val TYPE_ACTIVITY = "activity"
     const val TYPE_LAYOUT = "layout"
@@ -73,6 +74,6 @@ object TemplateCode {
 
     const val interfaceFunCode = "#javadoc\n" +
             "@FormUrlEncoded\n" +
-            "@Post\n" +
+            "@Post(\"#url\")\n" +
             "fun #funName(#requestParameter):Call<BaseEntity<#resultBean>>\n"
 }

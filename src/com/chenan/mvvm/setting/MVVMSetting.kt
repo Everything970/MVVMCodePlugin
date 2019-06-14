@@ -6,17 +6,21 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import org.jdom.Element
+import org.jf.util.SparseArray
 
 class MVVMSetting : PersistentStateComponent<Element> {
 
     var activity: String = Utils.defaultActivity
     var viewModel: String = Utils.defaultViewModel
     var layout: String = Utils.defaultLayout
+    var activity:
+
     var isOpen: Boolean = false
     var beanPath: String = ""
     var retrofitPath: String = ""
     var retrofitInterface: String = ""
     var interfaceFunCode: String = TemplateCode.interfaceFunCode
+
 
     override fun getState(): Element? {
         return Element("MVVMSetting").apply {

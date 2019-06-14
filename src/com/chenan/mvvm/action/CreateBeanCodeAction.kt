@@ -29,7 +29,7 @@ class CreateBeanCodeAction : AnAction() {
             title = "创建Bean Class"
             setListener(object : CreateBeanDialog.OnClickListener {
 
-                override fun OnOK(beanName: String, json: String) {
+                override fun onOK(beanName: String, json: String) {
                     val helper = BeanCodeHelper()
                     PsiManager.getInstance(project).findDirectory(virtualFile)?.let { psiDirectory ->
                         val psiFile = psiDirectory.findFile("$beanName.kt")
@@ -43,14 +43,14 @@ class CreateBeanCodeAction : AnAction() {
                                 setErrorText("已存在该类，是否继续生成代码。")
                                 setOkOperation {
                                     PsiDocumentManager.getInstance(project).getDocument(psiFile)?.setText(helper.getBeanString(json, packageName, beanName))
-                                    dispose()
+                                    dialogWrapper.close(0)
                                 }
                             }.show()
                         }
                     }
                 }
 
-                override fun OnCancel() {
+                override fun onCancel() {
 
                 }
             })

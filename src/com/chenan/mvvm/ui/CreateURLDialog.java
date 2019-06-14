@@ -1,16 +1,11 @@
 package com.chenan.mvvm.ui;
 
-import com.chenan.mvvm.util.BeanCodeHelper;
 import com.chenan.mvvm.util.FunCodeHelper;
-import com.chenan.mvvm.util.Utils;
 import com.intellij.openapi.project.Project;
-import org.apache.http.util.TextUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.event.*;
-import java.util.Objects;
 
 public class CreateURLDialog extends JDialog {
     private JPanel contentPane;
@@ -24,14 +19,17 @@ public class CreateURLDialog extends JDialog {
     private JComboBox<String> comboBoxResult;
     private JTextField textFieldRequestName;
     private JTextField textFieldResultName;
-    private JScrollPane jScrollPaneRequest;
-    private JScrollPane jScrollPaneResult;
+    private JScrollPane scrollPaneRequest;
+    private JScrollPane scrollPaneResult;
     private JTextArea textAreaRequest;
     private JTextArea textAreaResult;
     private JTextArea textAreaFunCode;
-    private JPanel jPanelRequestBean;
-    private JPanel jPanelResultBean;
+    private JPanel panelRequestBean;
+    private JPanel panelResultBean;
+    private JLabel labelRequestName;
+    private JLabel labelResultName;
     private FunCodeHelper codeHelper;
+    private OnClickListener listener;
 
     public CreateURLDialog(Project project) {
         setTitle("新建接口方法（Beta）");
@@ -44,42 +42,50 @@ public class CreateURLDialog extends JDialog {
         comboBoxRequest.addActionListener(e -> {
             String item = (String) comboBoxRequest.getSelectedItem();
             if (item == null) {
-                jScrollPaneRequest.setVisible(false);
-                jPanelRequestBean.setVisible(false);
-                textFieldRequestName.setEditable(false);
+                scrollPaneRequest.setVisible(false);
+                panelRequestBean.setVisible(false);
+                labelRequestName.setVisible(false);
+                textFieldRequestName.setVisible(false);
             } else if (item.equals("Bean")) {
-                jScrollPaneRequest.setVisible(true);
-                jPanelRequestBean.setVisible(true);
-                textFieldRequestName.setEditable(true);
+                scrollPaneRequest.setVisible(true);
+                panelRequestBean.setVisible(true);
+                labelRequestName.setVisible(true);
+                textFieldRequestName.setVisible(true);
             } else if (item.equals("Body") || item.equals("Field")) {
-                jScrollPaneRequest.setVisible(true);
-                jPanelRequestBean.setVisible(false);
-                textFieldRequestName.setEditable(false);
+                scrollPaneRequest.setVisible(true);
+                panelRequestBean.setVisible(false);
+                labelRequestName.setVisible(false);
+                textFieldRequestName.setVisible(false);
             } else {
-                jScrollPaneRequest.setVisible(false);
-                jPanelRequestBean.setVisible(false);
-                textFieldRequestName.setEditable(false);
+                scrollPaneRequest.setVisible(false);
+                panelRequestBean.setVisible(false);
+                labelRequestName.setVisible(false);
+                textFieldRequestName.setVisible(false);
             }
         });
 
         comboBoxResult.addActionListener(e -> {
             String item = (String) comboBoxResult.getSelectedItem();
             if (item == null) {
-                jScrollPaneResult.setVisible(false);
-                jPanelResultBean.setVisible(false);
-                textFieldResultName.setEditable(false);
+                scrollPaneResult.setVisible(false);
+                panelResultBean.setVisible(false);
+                labelResultName.setVisible(false);
+                textFieldResultName.setVisible(false);
             } else if (item.equals("Bean")) {
-                jScrollPaneResult.setVisible(true);
-                jPanelResultBean.setVisible(true);
-                textFieldResultName.setEditable(true);
+                scrollPaneResult.setVisible(true);
+                panelResultBean.setVisible(true);
+                labelResultName.setVisible(true);
+                textFieldResultName.setVisible(true);
             } else if (item.equals("Map")) {
-                jScrollPaneResult.setVisible(true);
-                jPanelResultBean.setVisible(false);
-                textFieldResultName.setEditable(false);
+                scrollPaneResult.setVisible(true);
+                panelResultBean.setVisible(false);
+                labelResultName.setVisible(false);
+                textFieldResultName.setVisible(false);
             } else {
-                jScrollPaneResult.setVisible(false);
-                jPanelResultBean.setVisible(false);
-                textFieldResultName.setEditable(false);
+                scrollPaneResult.setVisible(false);
+                panelResultBean.setVisible(false);
+                labelResultName.setVisible(false);
+                textFieldResultName.setVisible(false);
             }
         });
 
@@ -120,40 +126,34 @@ public class CreateURLDialog extends JDialog {
     }
 
     private void onOK() {
-        // add your code here
-        if (TextUtils.isEmpty(textFieldURL.getText())) {
-            Utils.showError("请输入Request URL");
-            return;
+        if (codeHelper.check()) {
+            if (listener != null) listener.onOK(codeHelper);
+            dispose();
         }
-        String name = textFieldFunName.getText();
-        if (TextUtils.isEmpty(name)) {
-            Utils.showError("请输入接口名");
-            return;
-        }
-        String requestType = Objects.requireNonNull(comboBoxRequest.getSelectedItem()).toString();
-        String requestName = textFieldRequestName.getText();
-
-        dispose();
     }
 
     private void onCancel() {
-        // add your code here if necessary
+        if (listener != null) listener.onCancel();
         dispose();
     }
 
+    public void setOnClickListener(OnClickListener listener) {
+        this.listener = listener;
+    }
+
     public void showDialog() {
+        codeHelper.bindTextArea(textAreaRequest, textAreaResult,
+                textAreaFunCode, textAreaRequestBean, textAreaResultBean);
+        codeHelper.setURLDocumentListener(textFieldURL, textFieldFunName, textFieldRequestName, textFieldResultName);
+        codeHelper.setTypeListener(comboBoxRequest, comboBoxResult);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-        System.out.println("jTextField:" + textFieldURL + " " + textFieldURL == null);
-        codeHelper.setURLDocumentListener(textFieldURL);
-        codeHelper.setRequestTypeListener(comboBoxRequest);
-        codeHelper.setResultTypeListener(comboBoxResult);
-        codeHelper.setRequestDocumentListener(textAreaRequest);
-        codeHelper.setRequestDocumentListener(textAreaResult);
+    }
 
-        codeHelper.bindTextArea(textAreaFunCode, textAreaRequestBean, textAreaResultBean);
-        codeHelper.bindTextField(textFieldFunName, textFieldRequestName, textFieldResultName);
+    public interface OnClickListener {
+        void onOK(@NotNull FunCodeHelper helper);
 
+        void onCancel();
     }
 }

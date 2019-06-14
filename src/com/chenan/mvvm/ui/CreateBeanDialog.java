@@ -59,13 +59,13 @@ public class CreateBeanDialog extends JDialog {
             Utils.showError("请输入json字符串");
             return;
         }
-        if (listener != null) listener.OnOK(name, json);
+        if (listener != null) listener.onOK(name, json);
         dispose();
     }
 
     private void onCancel() {
         // add your code here if necessary
-        if (listener != null) listener.OnCancel();
+        if (listener != null) listener.onCancel();
         dispose();
     }
 
@@ -87,8 +87,8 @@ public class CreateBeanDialog extends JDialog {
     }
 
     public interface OnClickListener {
-        void OnOK(@NotNull String beanName, @NotNull String json);
+        void onOK(@NotNull String beanName, @NotNull String json);
 
-        void OnCancel();
+        void onCancel();
     }
 }

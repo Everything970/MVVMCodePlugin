@@ -31,7 +31,7 @@ class MakeBeanCodeAction : AnAction() {
             title = "生成 Bean Class 代码"
             setListener(object : CreateBeanDialog.OnClickListener {
 
-                override fun OnOK(beanName: String, json: String) {
+                override fun onOK(beanName: String, json: String) {
                     val helper = BeanCodeHelper()
                     if (beanName != name) {
                         psiFile.name = "$beanName.kt"
@@ -41,7 +41,7 @@ class MakeBeanCodeAction : AnAction() {
                     }
                 }
 
-                override fun OnCancel() {
+                override fun onCancel() {
 
                 }
             })

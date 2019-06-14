@@ -18,205 +18,210 @@ class FunCodeHelper(project: Project) {
 
     private val interfaceFunCode = setting.interfaceFunCode
 
-    var funName: String = ""
-        set(value) {
-            if (field != value) {
-                textFieldFunName?.text = value
-            }
-            field = value
-            var beanName = if (
-                    arrayOf("get", "set", "Get", "Set").any { value.startsWith(it) }
-            ) {
-                value.substring(3).let {
-                    if (it.isEmpty()) value
-                    else it
-                }
-            } else {
-                value
-            }
-            beanName = beanName.replaceRange(0, 1, beanName[0].toUpperCase().toString())
-            requestName = beanName + "Request"
-            resultName = beanName + "Bean"
-        }
-    var requestName: String = ""
-        set(value) {
-            if (value != field) {
-                textFieldRequestName?.text = value
-            }
-            field = value
-        }
-    var resultName: String = ""
-        set(value) {
-            if (value != field) {
-                textFieldResultName?.text = value
-            }
-            field = value
-        }
-
-    var requestType: String = ""
-    var resultType: String = ""
-    var requestDocument: String = ""
-    var resultDocument: String = ""
-
-    var javadocStr = ""
-        set(value) {
-            if (field != value) {
-                makeFunCode()
-            }
-            field = value
-        }
-    var requestParameter: String = ""
-        set(value) {
-            if (field != value) {
-                makeFunCode()
-            }
-            field = value
-        }
-    var resultBean: String = ""
-        set(value) {
-            if (field != value) {
-                makeFunCode()
-            }
-            field = value
-        }
-    var requestContent: String = ""
-        set(value) {
-            if (value != field) {
-                textAreaRequest?.text = field
-            }
-            field = value
-        }
-    var resultContent: String = ""
-        set(value) {
-            if (value != field) {
-                textAreaResult?.text = field
-            }
-            field = value
-        }
-
-    var funCode: String = ""
-        set(value) {
-            if (value != field) {
-                textAreaFunCode?.text = field
-            }
-            field = value
-        }
-
-    var textAreaRequest: JTextArea? = null
-    var textAreaResult: JTextArea? = null
-    var textAreaFunCode: JTextArea? = null
+    var textFieldURL: JTextField? = null
+    var textAreaRequestJson: JTextArea? = null
+    var textAreaResultJson: JTextArea? = null
 
     var textFieldFunName: JTextField? = null
     var textFieldRequestName: JTextField? = null
     var textFieldResultName: JTextField? = null
 
-    fun bindTextArea(funCode: JTextArea, request: JTextArea, result: JTextArea) {
+    var textAreaFunCode: JTextArea? = null
+    var textAreaRequest: JTextArea? = null
+    var textAreaResult: JTextArea? = null
+
+
+    var comboBoxRequestType: JComboBox<String>? = null
+    var comboBoxResultType: JComboBox<String>? = null
+
+    val funURL: String
+        get() = textFieldURL?.text ?: ""
+    val funName: String
+        get() = textFieldFunName?.text ?: ""
+    val requestName: String
+        get() = textFieldRequestName?.text ?: ""
+    val resultName: String
+        get() = textFieldResultName?.text ?: ""
+
+    val requestType: String
+        get() = comboBoxRequestType?.selectedItem?.toString() ?: ""
+    val resultType: String
+        get() = comboBoxResultType?.selectedItem?.toString() ?: ""
+
+    val requestDocument: String
+        get() = textAreaRequestJson?.text ?: ""
+    val resultDocument: String
+        get() = textAreaResultJson?.text ?: ""
+
+    var javadocStr = ""
+    var requestParameter: String = ""
+    var resultBean: String = ""
+
+    val funCode: String
+        get() = textAreaFunCode?.text ?: ""
+    val requestContent: String
+        get() = textAreaRequest?.text ?: ""
+    val resultContent: String
+        get() = textAreaResult?.text ?: ""
+
+
+    fun bindTextArea(requestDocument: JTextArea, resultDocument: JTextArea, funCode: JTextArea, request: JTextArea, result: JTextArea) {
+        textAreaRequestJson = requestDocument
+        textAreaResultJson = resultDocument
         textAreaFunCode = funCode
         textAreaRequest = request
         textAreaResult = result
+        requestDocument.document.addDocumentListener(object : SimpleDocumentListener() {
+            override fun onUpdate(e: DocumentEvent, text: String) {
+                println("requestDocument:$text")
+                makeRequest()
+            }
+        })
+        resultDocument.document.addDocumentListener(object : SimpleDocumentListener() {
+            override fun onUpdate(e: DocumentEvent, text: String) {
+                println("resultDocument:$text")
+                makeResult()
+            }
+        })
     }
 
-    fun bindTextField(funName: JTextField, requestName: JTextField, resultName: JTextField) {
-        textFieldFunName = funName
-        textFieldRequestName = requestName
-        textFieldResultName = resultName
-    }
 
-
-    fun setURLDocumentListener(jTextField: JTextField) {
-        println("jTextField:$jTextField")
-        jTextField.document.addDocumentListener(object : SimpleDocumentListener() {
-            override fun onUpdate(e: DocumentEvent) {
-                val url = e.document.getText(0, e.document.length)
-                println("setURLDocumentListener url:$url")
-                if (!url.isNullOrEmpty()) {
-                    var start = url.lastIndexOf('/')
-                    if (start < 0) start = url.lastIndexOf('\\')
-                    funName = if (start < 0) {
-                        url
+    fun setURLDocumentListener(tfURL: JTextField, tfFunName: JTextField, tfRequestName: JTextField, tfResultName: JTextField) {
+        textFieldURL = tfURL
+        textFieldFunName = tfFunName
+        textFieldRequestName = tfRequestName
+        textFieldResultName = tfResultName
+        tfRequestName.document.addDocumentListener(object : SimpleDocumentListener() {
+            override fun onUpdate(e: DocumentEvent, text: String) {
+                makeResult()
+            }
+        })
+        tfResultName.document.addDocumentListener(object : SimpleDocumentListener() {
+            override fun onUpdate(e: DocumentEvent, text: String) {
+                makeResult()
+            }
+        })
+        tfFunName.document.addDocumentListener(object : SimpleDocumentListener() {
+            override fun onUpdate(e: DocumentEvent, text: String) {
+                if (text.isNotEmpty()) {
+                    var beanName = if (arrayOf("get", "set", "Get", "Set").any { text.startsWith(it) }) {
+                        text.substring(3).let {
+                            if (it.isEmpty()) text
+                            else it
+                        }
                     } else {
-                        url.substring(start + 1)
+                        text
                     }
+                    beanName = beanName.replaceRange(0, 1, beanName[0].toUpperCase().toString())
+                    textFieldRequestName?.text = beanName + "Request"
+                    textFieldResultName?.text = beanName + "Bean"
+                } else {
+                    textFieldRequestName?.text = ""
+                    textFieldResultName?.text = ""
                 }
             }
         })
-    }
-
-    fun setRequestTypeListener(jComboBox: JComboBox<String>) {
-        jComboBox.addActionListener { actionEvent ->
-            requestType = (actionEvent.source as? JComboBox<*>)?.selectedItem as? String ?: return@addActionListener
-        }
-    }
-
-    fun setRequestDocumentListener(jTextArea: JTextArea) {
-        jTextArea.document.addDocumentListener(object : SimpleDocumentListener() {
-            override fun onUpdate(e: DocumentEvent) {
-                requestDocument = e.document.getText(0, e.document.length)
+        tfURL.document.addDocumentListener(object : SimpleDocumentListener() {
+            override fun onUpdate(e: DocumentEvent, text: String) {
+                var start = text.lastIndexOf('/')
+                if (start < 0) start = text.lastIndexOf('\\')
+                textFieldFunName?.text = if (start < 0) text
+                else text.substring(start + 1)
             }
         })
     }
 
-    fun setResultTypeListener(jComboBox: JComboBox<String>) {
-        jComboBox.addActionListener { actionEvent ->
-            resultType = (actionEvent.source as? JComboBox<*>)?.selectedItem as? String ?: return@addActionListener
+    fun setTypeListener(cbRequestType: JComboBox<String>, cbResultType: JComboBox<String>) {
+        comboBoxRequestType = cbRequestType
+        comboBoxResultType = cbResultType
+        cbRequestType.addActionListener {
+            makeRequest()
+        }
+        cbResultType.addActionListener {
+            makeResult()
         }
     }
 
-    fun setResultDocumentListener(jTextArea: JTextArea) {
-        jTextArea.document.addDocumentListener(object : SimpleDocumentListener() {
-            override fun onUpdate(e: DocumentEvent) {
-                resultDocument = e.document.getText(0, e.document.length)
-            }
-        })
+    fun check(): Boolean {
+        when {
+            funURL.isEmpty() -> Utils.showError("请输入请求路径")
+            funName.isEmpty() -> Utils.showError("方法名不能为空")
+            requestName.isEmpty() -> Utils.showError("请求参数名不能为空")
+            resultName.isEmpty() -> Utils.showError("返回数据名不能为空")
+            requestType == "Bean" && requestContent == "Error" -> Utils.showError("请求参数错误")
+            requestType == "Filed" && requestParameter == "Error" -> Utils.showError("请求参数错误")
+            resultType == "Bean" && resultContent == "Error" -> Utils.showError("返回数据错误")
+            else -> return true
+        }
+        return false
     }
 
     private fun makeRequest() {
-        requestParameter = when (requestType) {
-            listRequest[0] -> {
-                requestContent = helper.getBeanString(requestDocument, setting.beanPath.substring(setting.beanPath.indexOf("java") + 5), requestName)
-                "\n@Body request:$requestName"
+        when (requestType) {
+            listRequest[0] -> {//Bean
+                textAreaRequest?.text = try {
+                    helper.getBeanString(requestDocument, setting.beanPath.substring(setting.beanPath.indexOf("java") + 5), requestName)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    "Error"
+                }
+                requestParameter = "\n\t@Body request:$requestName\n"
             }
-            listRequest[1] -> {
-                requestContent = ""
-                "\n@Body request: RequestBody\n"
+            listRequest[1] -> {//Body
+                textAreaRequest?.text = ""
+                requestParameter = "\n\t@Body request: RequestBody\n"
             }
-            listRequest[2] -> {
-                requestContent = ""
-                helper.getFieldContent(requestDocument)
+            listRequest[2] -> {//Field
+                textAreaRequest?.text = ""
+                requestParameter = helper.getFieldContent(requestDocument)
             }
             else -> {
-                requestContent = ""
-                ""
+                textAreaRequest?.text = ""
+                requestParameter = ""
             }
         }
+        makeFunCode()
     }
 
     private fun makeResult() {
-        resultBean = when (requestType) {
-            listResult[0] -> {
-                resultContent = helper.getBeanString(resultDocument, setting.beanPath.substring(setting.beanPath.indexOf("java") + 5), resultName)
-                requestName
+        when (resultType) {
+            listResult[0] -> {//Bean
+                textAreaResult?.text = try {
+                    helper.getBeanString(resultDocument, setting.beanPath.substring(setting.beanPath.indexOf("java") + 5), resultName)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    "Error"
+                }
+                resultBean = requestName
             }
-            listResult[1] -> {
-                requestContent = ""
-                "Map<String,String>"
+            listResult[1] -> {//Map
+                textAreaResult?.text = ""
+                resultBean = "Map<String,String>"
             }
             listResult[7] -> {
-                requestContent = ""
-                ""
+                textAreaResult?.text = ""
+                resultBean = ""
             }
             else -> {
-                requestContent = ""
-                requestType
+                textAreaResult?.text = ""
+                resultBean = requestType
             }
         }
+        makeFunCode()
     }
 
     private fun makeFunCode() {
-        funCode = interfaceFunCode.replace(TemplateCode.javadoc, javadocStr)
+        textAreaFunCode?.text = interfaceFunCode.replace(TemplateCode.javadoc, javadocStr)
+                .replace(TemplateCode.interfaceURL, funURL)
                 .replace(TemplateCode.funName, funName)
                 .replace(TemplateCode.requestParameter, requestParameter)
                 .let {
+                    if (requestType != "Field") {
+                        it.replace("@FormUrlEncoded\n", "")
+                    } else {
+                        it
+                    }
+                }.let {
                     if (resultBean.isEmpty()) it.replaceRange(it.lastIndexOf(":Call") + 5, it.length, "<NoDataEntity>")
                     else it.replace(TemplateCode.resultBean, resultBean)
                 }
@@ -225,18 +230,18 @@ class FunCodeHelper(project: Project) {
 
     abstract class SimpleDocumentListener : DocumentListener {
 
-        abstract fun onUpdate(e: DocumentEvent)
+        abstract fun onUpdate(e: DocumentEvent, text: String)
 
         override fun changedUpdate(e: DocumentEvent) {
-            onUpdate(e)
+            onUpdate(e, e.document.getText(0, e.document.length) ?: "")
         }
 
         override fun insertUpdate(e: DocumentEvent) {
-            onUpdate(e)
+            onUpdate(e, e.document.getText(0, e.document.length) ?: "")
         }
 
         override fun removeUpdate(e: DocumentEvent) {
-            onUpdate(e)
+            onUpdate(e, e.document.getText(0, e.document.length) ?: "")
         }
     }
 }
