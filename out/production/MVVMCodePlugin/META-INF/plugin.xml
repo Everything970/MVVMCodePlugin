@@ -10,8 +10,8 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      version 0.0.2 : add create code of Retrofit.\n
-      version 0.0.3 : add select kotlin bean that already exist.\n
+      version 0.0.2 : add create code of Retrofit.
+      version 0.0.3 : add select kotlin bean that already exist.
       ................................
     ]]>
     </change-notes>
@@ -27,29 +27,29 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <projectConfigurable groupId="tools" displayName="代码（MVVM）生成设置" id="setting.MVVMConfigurable"
-                             instance="com.chenan.mvvm.setting.MVVMConfigurable"/>
-        <projectService serviceInterface="com.chenan.mvvm.setting.MVVMSetting"
-                        serviceImplementation="com.chenan.mvvm.setting.MVVMSetting"/>
+                             instance="pers.chenan.code.setting.MVVMConfigurable"/>
+        <projectService serviceInterface="pers.chenan.code.setting.MVVMSetting"
+                        serviceImplementation="pers.chenan.code.setting.MVVMSetting"/>
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
-        <action id="plugin.CreateViewCodeAction" class="com.chenan.mvvm.action.CreateViewCodeAction" text="生成mvvm代码"
+        <action id="plugin.CreateViewCodeAction" class="pers.chenan.code.action.CreateViewCodeAction" text="生成mvvm代码"
                 description="Create code of MVVM">
             <add-to-group group-id="GenerateGroup" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt shift V"/>
         </action>
-        <action id="plugin.MakeBeanCodeAction" class="com.chenan.mvvm.action.MakeBeanCodeAction" text="Json 生成 Bean"
+        <action id="plugin.MakeBeanCodeAction" class="pers.chenan.code.action.MakeBeanCodeAction" text="Json 生成 Bean"
                 description="use json to make code of Bean ">
             <add-to-group group-id="GenerateGroup" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="shift alt B"/>
         </action>
-        <action id="plugin.CreateBeanCodeAction" class="com.chenan.mvvm.action.CreateBeanCodeAction"
+        <action id="plugin.CreateBeanCodeAction" class="pers.chenan.code.action.CreateBeanCodeAction"
                 text="Json Kotlin Class"
                 description="user json to create code of bean">
             <add-to-group group-id="NewGroup" anchor="after" relative-to-action="Kotlin.NewFile"/>
         </action>
-        <action id="pulgin.CreateURLAction" class="com.chenan.mvvm.action.CreateURLAction" text="添加接口方法（Beta）"
+        <action id="pulgin.CreateURLAction" class="pers.chenan.code.action.CreateURLAction" text="添加接口方法（Beta）"
                 description="add interface of Retrofit by Kotlin">
             <add-to-group group-id="GenerateGroup" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="shift alt R"/>
