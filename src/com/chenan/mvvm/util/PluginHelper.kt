@@ -33,7 +33,7 @@ class PluginHelper private constructor(
 
     val layoutSet: HashSet<String> by lazy {
         hashSetOf<String>().also {
-            it.add(Utils.defaultViewModel)
+            it.add(Utils.defaultLayout)
             it.addAll(setting.layoutMap.keys)
         }
     }

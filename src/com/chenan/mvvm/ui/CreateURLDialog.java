@@ -92,7 +92,16 @@ public class CreateURLDialog extends JDialog {
         for (String request : codeHelper.getListRequest()) {
             comboBoxRequest.addItem(request);
         }
+
+        for (String request:codeHelper.getListBean()){
+            comboBoxRequest.addItem(request);
+        }
+
         for (String result : codeHelper.getListResult()) {
+            comboBoxResult.addItem(result);
+        }
+
+        for (String result:codeHelper.getListBean()){
             comboBoxResult.addItem(result);
         }
 

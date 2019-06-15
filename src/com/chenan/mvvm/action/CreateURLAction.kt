@@ -3,7 +3,6 @@ package com.chenan.mvvm.action
 import com.chenan.mvvm.setting.MVVMSetting
 import com.chenan.mvvm.ui.CreateURLDialog
 import com.chenan.mvvm.util.FunCodeHelper
-import com.chenan.mvvm.util.Utils
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
@@ -11,17 +10,10 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogBuilder
-import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.JavaPsiFacade
-import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
-import com.intellij.psi.search.GlobalSearchScope
-import com.intellij.psi.search.searches.ReferencesSearch
-import java.util.regex.Pattern
-import javax.swing.Action
 
 class CreateURLAction : AnAction() {
 
@@ -58,7 +50,7 @@ class CreateURLAction : AnAction() {
             }
         }
         if (helper.requestType == "Bean") {
-            JavaPsiFacade.getInstance(project).findPackage(setting.beanPath)?.directories?.get(0)?.let { psiDirectory ->
+            JavaPsiFacade.getInstance(project).findPackage(setting.beanPackagePath)?.directories?.get(0)?.let { psiDirectory ->
                 psiDirectory.findFile(helper.requestName + ".kt")?.let { psiFile ->
                     DialogBuilder().apply {
                         setTitle("提示")
@@ -74,7 +66,7 @@ class CreateURLAction : AnAction() {
             }
         }
         if (helper.resultType == "Bean") {
-            JavaPsiFacade.getInstance(project).findPackage(setting.beanPath)?.directories?.get(0)?.let { psiDirectory ->
+            JavaPsiFacade.getInstance(project).findPackage(setting.beanPackagePath)?.directories?.get(0)?.let { psiDirectory ->
                 psiDirectory.findFile(helper.resultName + ".kt")?.let { psiFile ->
                     DialogBuilder().apply {
                         setTitle("提示")

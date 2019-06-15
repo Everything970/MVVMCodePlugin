@@ -3,18 +3,26 @@ package com.chenan.mvvm.util
 import com.chenan.mvvm.code.TemplateCode
 import com.chenan.mvvm.setting.MVVMSetting
 import com.intellij.openapi.project.Project
+import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.search.GlobalSearchScope
 import javax.swing.JComboBox
 import javax.swing.JTextArea
 import javax.swing.JTextField
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-class FunCodeHelper(project: Project) {
+class FunCodeHelper(private val project: Project) {
     private val setting = MVVMSetting.getInstance(project)
     private val helper = BeanCodeHelper()
 
     val listRequest = arrayOf("Bean", "Body", "Field", "Null")
     val listResult = arrayOf("Bean", "Map", "String", "Int", "Long", "Double", "Float", "Null")
+
+    val listBean: List<String> by lazy {
+        JavaPsiFacade.getInstance(project).findPackage(setting.beanPackagePath)?.getFiles(GlobalSearchScope.allScope(project))?.let { arrayOfPsiFiles ->
+            arrayOfPsiFiles.filter { it.name.endsWith(".kt") }.map { it.name }
+        } ?: listOf()
+    }
 
     private val interfaceFunCode = setting.interfaceFunCode
 
@@ -93,7 +101,7 @@ class FunCodeHelper(project: Project) {
         textFieldResultName = tfResultName
         tfRequestName.document.addDocumentListener(object : SimpleDocumentListener() {
             override fun onUpdate(e: DocumentEvent, text: String) {
-                makeResult()
+                makeRequest()
             }
         })
         tfResultName.document.addDocumentListener(object : SimpleDocumentListener() {
@@ -157,23 +165,27 @@ class FunCodeHelper(project: Project) {
     }
 
     private fun makeRequest() {
-        when (requestType) {
-            listRequest[0] -> {//Bean
+        when {
+            requestType == "Bean" -> {//Bean
                 textAreaRequest?.text = try {
-                    helper.getBeanString(requestDocument, setting.beanPath.substring(setting.beanPath.indexOf("java") + 5), requestName)
+                    helper.getBeanString(requestDocument, setting.beanPackagePath.substring(setting.beanPackagePath.indexOf("java") + 5), requestName)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     "Error"
                 }
                 requestParameter = "\n\t@Body request:$requestName\n"
             }
-            listRequest[1] -> {//Body
+            requestType == "Body" -> {//Body
                 textAreaRequest?.text = ""
                 requestParameter = "\n\t@Body request: RequestBody\n"
             }
-            listRequest[2] -> {//Field
+            requestType == "Field" -> {//Field
                 textAreaRequest?.text = ""
                 requestParameter = helper.getFieldContent(requestDocument)
+            }
+            requestType.endsWith(".kt") -> {
+                textAreaRequest?.text = ""
+                requestParameter = "\n\t@Body request:${requestType.substring(0, requestType.length - 3)}\n"
             }
             else -> {
                 textAreaRequest?.text = ""
@@ -184,23 +196,27 @@ class FunCodeHelper(project: Project) {
     }
 
     private fun makeResult() {
-        when (resultType) {
-            listResult[0] -> {//Bean
+        when {
+            resultType == "Bean" -> {//Bean
                 textAreaResult?.text = try {
-                    helper.getBeanString(resultDocument, setting.beanPath.substring(setting.beanPath.indexOf("java") + 5), resultName)
+                    helper.getBeanString(resultDocument, setting.beanPackagePath.substring(setting.beanPackagePath.indexOf("java") + 5), resultName)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     "Error"
                 }
                 resultBean = requestName
             }
-            listResult[1] -> {//Map
+            resultType == "Map" -> {//Map
                 textAreaResult?.text = ""
                 resultBean = "Map<String,String>"
             }
-            listResult[7] -> {
+            resultType == "Null" -> {
                 textAreaResult?.text = ""
                 resultBean = ""
+            }
+            resultType.endsWith(".kt") -> {
+                textAreaResult?.text = ""
+                resultBean = resultType.substring(0, resultType.length - 3)
             }
             else -> {
                 textAreaResult?.text = ""

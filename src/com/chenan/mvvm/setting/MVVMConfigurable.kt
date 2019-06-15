@@ -65,7 +65,7 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
         ui.jPanelBean.isVisible = setting.isOpen
         ui.jPanelRetrofit.isVisible = setting.isOpen
         ui.textAreaFunCode.text = setting.interfaceFunCode
-        ui.textFieldBeanPath.text = setting.beanPath
+        ui.textFieldBeanPath.text = setting.beanPackagePath
         if (setting.retrofitPath.isNotEmpty())
             VirtualFileManager.getInstance().findFileByUrl(setting.retrofitPath)?.let { virtualFile ->
                 PsiManager.getInstance(project).findFile(virtualFile)?.let { psiFile ->
@@ -110,14 +110,14 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
                     throw NullPointerException("方法模板不能为空")
                 }
                 else -> {
-                    setting.beanPath = ui.textFieldBeanPath.text
+                    setting.beanPackagePath = ui.textFieldBeanPath.text
                     setting.retrofitPath = selectedRetrofitPath
                     setting.retrofitInterface = ui.comboBoxInterface.selectedItem.toString()
                     setting.interfaceFunCode = ui.textAreaFunCode.text
                 }
             }
         } else {
-            setting.beanPath = ""
+            setting.beanPackagePath = ""
             setting.retrofitPath = ""
             setting.retrofitInterface = ""
         }
@@ -125,7 +125,7 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
 
     override fun isModified(): Boolean {
         return ui.comboBoxActivity.selectedItem != setting.activity || ui.comboBoxViewModel.selectedItem != setting.viewModel || ui.comboBoxLayout.selectedItem != setting.layout
-                || ui.checkBoxRetrofit.isSelected != setting.isOpen || ui.textFieldBeanPath.text != setting.beanPath || selectedRetrofitPath != setting.retrofitPath
+                || ui.checkBoxRetrofit.isSelected != setting.isOpen || ui.textFieldBeanPath.text != setting.beanPackagePath || selectedRetrofitPath != setting.retrofitPath
                 || ui.comboBoxInterface.selectedItem != setting.retrofitInterface || ui.textAreaFunCode.text != setting.interfaceFunCode
     }
 

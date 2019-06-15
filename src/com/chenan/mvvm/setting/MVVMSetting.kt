@@ -8,7 +8,6 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import org.jdom.Element
-import org.jf.util.SparseArray
 
 class MVVMSetting : PersistentStateComponent<Element> {
 
@@ -21,7 +20,7 @@ class MVVMSetting : PersistentStateComponent<Element> {
     val layoutMap: HashMap<String, String> = hashMapOf()
 
     var isOpen: Boolean = false
-    var beanPath: String = ""
+    var beanPackagePath: String = ""
     var retrofitPath: String = ""
     var retrofitInterface: String = ""
     var interfaceFunCode: String = TemplateCode.interfaceFunCode
@@ -39,7 +38,7 @@ class MVVMSetting : PersistentStateComponent<Element> {
             setAttribute("view_model", viewModel)
             setAttribute("layout", layout)
             setAttribute("is_open", isOpen.toString())
-            setAttribute("bean_path", beanPath)
+            setAttribute("bean_path", beanPackagePath)
             setAttribute("retrofit_path", retrofitPath)
             setAttribute("retrofit_interface", retrofitInterface)
             setAttribute("interface_fun_code", interfaceFunCode)
@@ -52,7 +51,7 @@ class MVVMSetting : PersistentStateComponent<Element> {
         viewModel = p0.getAttributeValue("view_model") ?: Utils.defaultViewModel
         layout = p0.getAttributeValue("layout") ?: Utils.defaultLayout
         isOpen = p0.getAttributeValue("is_open")?.toBoolean() ?: false
-        beanPath = p0.getAttributeValue("bean_path") ?: ""
+        beanPackagePath = p0.getAttributeValue("bean_path") ?: ""
         retrofitPath = p0.getAttributeValue("retrofit_path") ?: ""
         retrofitInterface = p0.getAttributeValue("retrofit_interface") ?: ""
         interfaceFunCode = p0.getAttributeValue("interface_fun_code") ?: TemplateCode.interfaceFunCode
