@@ -1,6 +1,6 @@
 package pers.chenan.code.action
 
-import pers.chenan.code.setting.MVVMSetting
+import pers.chenan.code.setting.PluginSetting
 import pers.chenan.code.ui.CreateURLDialog
 import pers.chenan.code.ui.MVVMSettingUIHelper
 import com.intellij.openapi.actionSystem.AnAction
@@ -35,7 +35,7 @@ class CreateURLAction : AnAction() {
     }
 
     private fun createCode(helper: MVVMSettingUIHelper, project: Project, editor: Editor) {
-        val setting = MVVMSetting.getInstance(project)
+        val setting = PluginSetting.getInstance(project)
         VirtualFileManager.getInstance().findFileByUrl(setting.retrofitPath)?.let { virtualFile ->
             PsiManager.getInstance(project).findFile(virtualFile)?.let { psiFile ->
                 PsiDocumentManager.getInstance(project).getDocument(psiFile)?.let { document ->
@@ -94,7 +94,7 @@ class CreateURLAction : AnAction() {
             if (project == null) {
                 e.presentation.isEnabled = false
             } else {
-                MVVMSetting.getInstance(project).let {
+                PluginSetting.getInstance(project).let {
                     e.presentation.isEnabled = it.isOpen
                 }
             }

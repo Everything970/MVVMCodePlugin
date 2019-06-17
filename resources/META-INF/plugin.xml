@@ -29,7 +29,9 @@
     <extensions defaultExtensionNs="com.intellij">
         <projectConfigurable groupId="tools" displayName="代码（MVVM）生成设置" id="setting.MVVMConfigurable"
                              instance="pers.chenan.code.setting.MVVMConfigurable"/>
-        <projectService serviceInterface="pers.chenan.code.setting.MVVMSetting"
+        <projectService serviceInterface="pers.chenan.code.setting.PluginSetting"
+                        serviceImplementation="pers.chenan.code.setting.PluginSetting"/>
+        <applicationService serviceInterface="pers.chenan.code.setting.MVVMSetting"
                         serviceImplementation="pers.chenan.code.setting.MVVMSetting"/>
     </extensions>
 

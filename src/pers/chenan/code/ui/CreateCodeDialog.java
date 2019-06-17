@@ -2,7 +2,7 @@ package pers.chenan.code.ui;
 
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
-import pers.chenan.code.setting.MVVMSetting;
+import pers.chenan.code.setting.PluginSetting;
 import pers.chenan.code.util.Utils;
 
 import javax.swing.*;
@@ -27,26 +27,26 @@ public class CreateCodeDialog extends JDialog {
     private JButton btEditLayout;
     private JButton btDeleteLayout;
 
-    private MVVMSetting setting;
+    private PluginSetting setting;
     private OnClickListener listener;
 
     public CreateCodeDialog(Project project) {
-        setting = MVVMSetting.getInstance(project);
+        setting = PluginSetting.getInstance(project);
         boxActivity.addItem(Utils.defaultActivity);
         boxViewModel.addItem(Utils.defaultViewModel);
         boxLayout.addItem(Utils.defaultLayout);
-        for (String activity : setting.getActivityMap().keySet()) {
+        for (String activity : setting.getMvvm().getActivityMap().keySet()) {
             boxActivity.addItem(activity);
         }
-        for (String viewModel : setting.getViewModelMap().keySet()) {
+        for (String viewModel : setting.getMvvm().getViewModelMap().keySet()) {
             boxViewModel.addItem(viewModel);
         }
-        for (String layout : setting.getLayoutMap().keySet()) {
+        for (String layout : setting.getMvvm().getLayoutMap().keySet()) {
             boxLayout.addItem(layout);
         }
-        boxActivity.setSelectedItem(setting.getActivity());
-        boxViewModel.setSelectedItem(setting.getViewModel());
-        boxLayout.setSelectedItem(setting.getLayout());
+        boxActivity.setSelectedItem(setting.getMvvm().getActivity());
+        boxViewModel.setSelectedItem(setting.getMvvm().getViewModel());
+        boxLayout.setSelectedItem(setting.getMvvm().getLayout());
 
         setTitle("MVVM");
         setContentPane(contentPane);
@@ -57,15 +57,15 @@ public class CreateCodeDialog extends JDialog {
 
         buttonCancel.addActionListener(e -> onCancel());
 
-        btEditActivity.addActionListener(e -> setting.editTemplateCode(boxActivity, 0));
-        btAddActivity.addActionListener(e -> setting.addTemplateCode(boxActivity, 0));
-        btDeleteActivity.addActionListener(e -> setting.deleteTemplateCode(boxActivity, 0));
-        btEditViewModel.addActionListener(e -> setting.editTemplateCode(boxViewModel, 1));
-        btAddViewModel.addActionListener(e -> setting.addTemplateCode(boxViewModel, 1));
-        btDeleteViewModel.addActionListener(e -> setting.deleteTemplateCode(boxViewModel, 1));
-        btEditLayout.addActionListener(e -> setting.editTemplateCode(boxLayout, 2));
-        btAddLayout.addActionListener(e -> setting.addTemplateCode(boxViewModel, 2));
-        btDeleteLayout.addActionListener(e -> setting.deleteTemplateCode(boxViewModel, 2));
+        btEditActivity.addActionListener(e -> setting.getMvvm().editTemplateCode(boxActivity, 0));
+        btAddActivity.addActionListener(e -> setting.getMvvm().addTemplateCode(boxActivity, 0));
+        btDeleteActivity.addActionListener(e -> setting.getMvvm().deleteTemplateCode(boxActivity, 0));
+        btEditViewModel.addActionListener(e -> setting.getMvvm().editTemplateCode(boxViewModel, 1));
+        btAddViewModel.addActionListener(e -> setting.getMvvm().addTemplateCode(boxViewModel, 1));
+        btDeleteViewModel.addActionListener(e -> setting.getMvvm().deleteTemplateCode(boxViewModel, 1));
+        btEditLayout.addActionListener(e -> setting.getMvvm().editTemplateCode(boxLayout, 2));
+        btAddLayout.addActionListener(e -> setting.getMvvm().addTemplateCode(boxViewModel, 2));
+        btDeleteLayout.addActionListener(e -> setting.getMvvm().deleteTemplateCode(boxViewModel, 2));
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -94,9 +94,9 @@ public class CreateCodeDialog extends JDialog {
         String strActivity = (String) boxActivity.getSelectedItem();
         String strViewModel = (String) boxViewModel.getSelectedItem();
         String strLayout = (String) boxLayout.getSelectedItem();
-        setting.setActivity(strActivity == null ? Utils.defaultActivity : strActivity);
-        setting.setViewModel(strViewModel == null ? Utils.defaultViewModel : strViewModel);
-        setting.setLayout(strLayout == null ? Utils.defaultLayout : strLayout);
+        setting.getMvvm().setActivity(strActivity == null ? Utils.defaultActivity : strActivity);
+        setting.getMvvm().setViewModel(strViewModel == null ? Utils.defaultViewModel : strViewModel);
+        setting.getMvvm().setLayout(strLayout == null ? Utils.defaultLayout : strLayout);
         dispose();
     }
 

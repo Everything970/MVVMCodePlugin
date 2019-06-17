@@ -13,6 +13,7 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiFile
 import com.intellij.psi.search.FilenameIndex
 import com.intellij.psi.search.GlobalSearchScope
+import pers.chenan.code.setting.PluginSetting
 import pers.chenan.code.ui.CreateCodeDialog
 
 class CreateViewCodeAction : AnAction() {
@@ -24,11 +25,7 @@ class CreateViewCodeAction : AnAction() {
         val project = e.getData(PlatformDataKeys.PROJECT)!!
         val editor = e.getData(PlatformDataKeys.EDITOR)!!
         val psiFile = e.getData(PlatformDataKeys.PSI_FILE)!!
-        val setting = MVVMSetting.getInstance(project)
-        if (setting.activity.isEmpty() || setting.viewModel.isEmpty() || setting.layout.isEmpty()) {
-            Utils.showError("请先配置activity/viewModel/layout")
-            return
-        }
+        val setting = PluginSetting.getInstance(project)
         val activityName = psiFile.name.replace("Activity.kt", "")
         val parentPath = psiFile.virtualFile.parent.path
         val index = parentPath.lastIndexOf("/java")
@@ -40,15 +37,15 @@ class CreateViewCodeAction : AnAction() {
             parentPath.substring(index + 6, parentPath.length)
         }).replace('/', '.')
 
-        if (!setting.isNeedConfirm) {
+        if (!setting.mvvm.isNeedConfirm) {
             createCode(project, setting, psiFile, editor, hadActivity, packageName, activityName)
         } else {
             CreateCodeDialog(project).apply {
                 setListener(object : CreateCodeDialog.OnClickListener {
                     override fun onOk(activity: String, viewModel: String, layout: String) {
-                        setting.activity = activity
-                        setting.viewModel = viewModel
-                        setting.layout = layout
+                        setting.mvvm.activity = activity
+                        setting.mvvm.viewModel = viewModel
+                        setting.mvvm.layout = layout
                         createCode(project, setting, psiFile, editor, hadActivity, packageName, activityName)
                     }
 
@@ -59,10 +56,10 @@ class CreateViewCodeAction : AnAction() {
         }
     }
 
-    private fun createCode(project: Project, setting: MVVMSetting, psiFile: PsiFile, editor: Editor, hadActivity: Boolean, packageName: String, activityName: String) {
+    private fun createCode(project: Project, setting: PluginSetting, psiFile: PsiFile, editor: Editor, hadActivity: Boolean, packageName: String, activityName: String) {
         //create code of activity
         WriteCommandAction.runWriteCommandAction(project) {
-            setting.activityCode?.let {
+            setting.mvvm.activityCode?.let {
                 editor.document.setText(Utils.getCodeContent(it, packageName, activityName))
             } ?: Utils.showError("所选activity模板为空")
 
@@ -73,7 +70,7 @@ class CreateViewCodeAction : AnAction() {
                     ?: it.createSubdirectory(TemplateCode.TYPE_VIEW_MODEL)
             val model = viewModel.findFile(activityName + "ViewModel.kt")
                     ?: viewModel.createFile(activityName + "ViewModel.kt")
-            setting.viewModelCode?.let { code ->
+            setting.mvvm.viewModelCode?.let { code ->
                 Utils.getCodeContent(code, packageName, activityName).let { content ->
                     PsiDocumentManager.getInstance(project).getDocument(model)?.setText(content)
                 }
@@ -84,7 +81,7 @@ class CreateViewCodeAction : AnAction() {
         val xml = FilenameIndex.getFilesByName(project, "activity${Utils.getLowerActivityName(activityName)}.xml", GlobalSearchScope.allScope(project))
         if (xml.isNotEmpty()) {
             val xmlEditor = PsiDocumentManager.getInstance(project).getDocument(xml[0])
-            setting.layoutCode?.let {
+            setting.mvvm.layoutCode?.let {
                 xmlEditor?.setText(Utils.getCodeContent(it, packageName, activityName))
             } ?: Utils.showError("所选Layout模板为空")
         }

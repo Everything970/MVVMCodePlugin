@@ -1,15 +1,12 @@
 package pers.chenan.code.setting
 
-import pers.chenan.code.code.TemplateCode
 import pers.chenan.code.ui.MVVMSettingUI
-import pers.chenan.code.ui.WriteCodeDialog
 import pers.chenan.code.util.Utils
 import pers.chenan.code.util.pathByProject
 import com.intellij.ide.util.PackageChooserDialog
 import com.intellij.ide.util.TreeClassChooserFactory
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
@@ -19,7 +16,7 @@ import javax.swing.JComponent
 
 class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
 
-    private val setting = MVVMSetting.getInstance(project)
+    private val setting = PluginSetting.getInstance(project)
     private val ui = MVVMSettingUI()
     private var selectedRetrofitPath: String = ""
 
@@ -33,37 +30,37 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
     }
 
     override fun reset() {
-        ui.checkBoxConfrim.isSelected = setting.isNeedConfirm
+        ui.checkBoxConfrim.isSelected = setting.mvvm.isNeedConfirm
         //activity Item
         ui.comboBoxActivity.removeAllItems()
         ui.comboBoxActivity.addItem(Utils.defaultActivity)
-        setting.activityMap.keys.forEach {
+        setting.mvvm.activityMap.keys.forEach {
             ui.comboBoxActivity.addItem(it)
         }
-        if (!setting.containsActivity(setting.activity)) {
-            setting.activity = Utils.defaultActivity
+        if (!setting.mvvm.containsActivity(setting.mvvm.activity)) {
+            setting.mvvm.activity = Utils.defaultActivity
         }
-        ui.comboBoxActivity.selectedItem = setting.activity
+        ui.comboBoxActivity.selectedItem = setting.mvvm.activity
         //viewModel Item
         ui.comboBoxViewModel.removeAllItems()
         ui.comboBoxViewModel.addItem(Utils.defaultViewModel)
-        setting.viewModelMap.keys.forEach {
+        setting.mvvm.viewModelMap.keys.forEach {
             ui.comboBoxViewModel.addItem(it)
         }
-        if (!setting.containsViewModel(setting.viewModel)) {
-            setting.viewModel = Utils.defaultViewModel
+        if (!setting.mvvm.containsViewModel(setting.mvvm.viewModel)) {
+            setting.mvvm.viewModel = Utils.defaultViewModel
         }
-        ui.comboBoxViewModel.selectedItem = setting.viewModel
+        ui.comboBoxViewModel.selectedItem = setting.mvvm.viewModel
         //layout Item
         ui.comboBoxLayout.removeAllItems()
         ui.comboBoxLayout.addItem(Utils.defaultLayout)
-        setting.layoutMap.keys.forEach {
+        setting.mvvm.layoutMap.keys.forEach {
             ui.comboBoxLayout.addItem(it)
         }
-        if (!setting.containsLayout(setting.layout)) {
-            setting.layout = Utils.defaultLayout
+        if (!setting.mvvm.containsLayout(setting.mvvm.layout)) {
+            setting.mvvm.layout = Utils.defaultLayout
         }
-        ui.comboBoxLayout.selectedItem = setting.layout
+        ui.comboBoxLayout.selectedItem = setting.mvvm.layout
 
         ui.checkBoxRetrofit.isSelected = setting.isOpen
         ui.jPanelBean.isVisible = setting.isOpen
@@ -91,10 +88,10 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
 
     @Throws(NullPointerException::class)
     override fun apply() {
-        setting.isNeedConfirm = ui.checkBoxConfrim.isSelected
-        setting.activity = ui.comboBoxActivity.selectedItem.toString()
-        setting.viewModel = ui.comboBoxViewModel.selectedItem.toString()
-        setting.layout = ui.comboBoxLayout.selectedItem.toString()
+        setting.mvvm.isNeedConfirm = ui.checkBoxConfrim.isSelected
+        setting.mvvm.activity = ui.comboBoxActivity.selectedItem.toString()
+        setting.mvvm.viewModel = ui.comboBoxViewModel.selectedItem.toString()
+        setting.mvvm.layout = ui.comboBoxLayout.selectedItem.toString()
         setting.isOpen = ui.checkBoxRetrofit.isSelected
         if (ui.checkBoxRetrofit.isSelected) {
             when {
@@ -129,8 +126,8 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
     }
 
     override fun isModified(): Boolean {
-        return ui.checkBoxConfrim.isSelected != setting.isNeedConfirm
-                || ui.comboBoxActivity.selectedItem != setting.activity || ui.comboBoxViewModel.selectedItem != setting.viewModel || ui.comboBoxLayout.selectedItem != setting.layout
+        return ui.checkBoxConfrim.isSelected != setting.mvvm.isNeedConfirm
+                || ui.comboBoxActivity.selectedItem != setting.mvvm.activity || ui.comboBoxViewModel.selectedItem != setting.mvvm.viewModel || ui.comboBoxLayout.selectedItem != setting.mvvm.layout
                 || ui.checkBoxRetrofit.isSelected != setting.isOpen || ui.textFieldBeanPath.text != setting.beanPackagePath || selectedRetrofitPath != setting.retrofitPath
                 || ui.comboBoxInterface.selectedItem != setting.retrofitInterface || ui.textAreaFunCode.text != setting.interfaceFunCode
     }
@@ -157,31 +154,31 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
             }
         }
         ui.btActivity.addActionListener {
-            setting.editTemplateCode(ui.comboBoxActivity, 0)
+            setting.mvvm.editTemplateCode(ui.comboBoxActivity, 0)
         }
         ui.btAddActivity.addActionListener {
-            setting.addTemplateCode(ui.comboBoxActivity, 0)
+            setting.mvvm.addTemplateCode(ui.comboBoxActivity, 0)
         }
         ui.btDeleteActivity.addActionListener {
-            setting.deleteTemplateCode(ui.comboBoxActivity, 0)
+            setting.mvvm.deleteTemplateCode(ui.comboBoxActivity, 0)
         }
         ui.btViewModel.addActionListener {
-            setting.editTemplateCode(ui.comboBoxViewModel, 1)
+            setting.mvvm.editTemplateCode(ui.comboBoxViewModel, 1)
         }
         ui.btAddViewModel.addActionListener {
-            setting.addTemplateCode(ui.comboBoxViewModel, 1)
+            setting.mvvm.addTemplateCode(ui.comboBoxViewModel, 1)
         }
         ui.btDeleteViewModel.addActionListener {
-            setting.deleteTemplateCode(ui.comboBoxViewModel, 1)
+            setting.mvvm.deleteTemplateCode(ui.comboBoxViewModel, 1)
         }
         ui.btLayout.addActionListener {
-            setting.editTemplateCode(ui.comboBoxLayout, 2)
+            setting.mvvm.editTemplateCode(ui.comboBoxLayout, 2)
         }
         ui.btAddLayout.addActionListener {
-            setting.addTemplateCode(ui.comboBoxLayout, 2)
+            setting.mvvm.addTemplateCode(ui.comboBoxLayout, 2)
         }
         ui.btDeleteLayout.addActionListener {
-            setting.deleteTemplateCode(ui.comboBoxLayout, 2)
+            setting.mvvm.deleteTemplateCode(ui.comboBoxLayout, 2)
         }
         ui.btSelectBeanPath.addActionListener {
             val chooser = PackageChooserDialog("选择新增Bean类所在包", project)

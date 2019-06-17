@@ -1,7 +1,7 @@
 package pers.chenan.code.ui
 
 import pers.chenan.code.code.TemplateCode
-import pers.chenan.code.setting.MVVMSetting
+import pers.chenan.code.setting.PluginSetting
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.search.GlobalSearchScope
@@ -14,7 +14,7 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
 class MVVMSettingUIHelper(private val project: Project) {
-    private val setting = MVVMSetting.getInstance(project)
+    private val setting = PluginSetting.getInstance(project)
     private val helper = BeanCodeHelper()
 
     val listRequest = arrayOf("Bean", "Body", "Field", "Null")

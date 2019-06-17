@@ -1,7 +1,5 @@
 package pers.chenan.code.setting
 
-import pers.chenan.code.code.TemplateCode
-import pers.chenan.code.util.Utils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.intellij.openapi.components.PersistentStateComponent
@@ -9,10 +7,12 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import org.jdom.Element
+import pers.chenan.code.code.TemplateCode
 import pers.chenan.code.ui.WriteCodeDialog
+import pers.chenan.code.util.Utils
 import javax.swing.JComboBox
 
-class MVVMSetting : PersistentStateComponent<Element> {
+class MVVMSetting: PersistentStateComponent<Element> {
 
     val activityMap: HashMap<String, String> = hashMapOf()
     val viewModelMap: HashMap<String, String> = hashMapOf()
@@ -22,11 +22,6 @@ class MVVMSetting : PersistentStateComponent<Element> {
     var activity: String = Utils.defaultActivity
     var viewModel: String = Utils.defaultViewModel
     var layout: String = Utils.defaultLayout
-    var isOpen: Boolean = false
-    var beanPackagePath: String = ""
-    var retrofitPath: String = ""
-    var retrofitInterface: String = ""
-    var interfaceFunCode: String = TemplateCode.interfaceFunCode
 
     val activityCode: String?
         get() = if (activity == Utils.defaultActivity) TemplateCode.activityCode else activityMap[activity]
@@ -41,11 +36,6 @@ class MVVMSetting : PersistentStateComponent<Element> {
             setAttribute("activity", activity)
             setAttribute("view_model", viewModel)
             setAttribute("layout", layout)
-            setAttribute("is_open", isOpen.toString())
-            setAttribute("bean_path", beanPackagePath)
-            setAttribute("retrofit_path", retrofitPath)
-            setAttribute("retrofit_interface", retrofitInterface)
-            setAttribute("interface_fun_code", interfaceFunCode)
             setAttribute("code_map", Gson().toJson(listOf(activityMap, viewModelMap, layoutMap)))
         }
     }
@@ -55,11 +45,6 @@ class MVVMSetting : PersistentStateComponent<Element> {
         activity = p0.getAttributeValue("activity") ?: Utils.defaultActivity
         viewModel = p0.getAttributeValue("view_model") ?: Utils.defaultViewModel
         layout = p0.getAttributeValue("layout") ?: Utils.defaultLayout
-        isOpen = p0.getAttributeValue("is_open")?.toBoolean() ?: false
-        beanPackagePath = p0.getAttributeValue("bean_path") ?: ""
-        retrofitPath = p0.getAttributeValue("retrofit_path") ?: ""
-        retrofitInterface = p0.getAttributeValue("retrofit_interface") ?: ""
-        interfaceFunCode = p0.getAttributeValue("interface_fun_code") ?: TemplateCode.interfaceFunCode
         val json = p0.getAttributeValue("code_map")
         if (!json.isNullOrEmpty()) {
             val list = Gson().fromJson<List<Map<String, String>>>(json, (object : TypeToken<List<Map<String, String>>>() {}).type)
@@ -71,7 +56,6 @@ class MVVMSetting : PersistentStateComponent<Element> {
             layoutMap.putAll(list.getOrElse(2) { mapOf() })
         }
     }
-
     fun containsActivity(activity: String): Boolean {
         return activity == Utils.defaultActivity || activityMap.containsKey(activity)
     }
@@ -216,8 +200,8 @@ class MVVMSetting : PersistentStateComponent<Element> {
 
     companion object {
         @JvmStatic
-        fun getInstance(project: Project): MVVMSetting {
-            return ServiceManager.getService(project, MVVMSetting::class.java)
+        fun getInstance(): MVVMSetting {
+            return ServiceManager.getService(MVVMSetting::class.java)
         }
     }
 }
