@@ -27,6 +27,7 @@ public class CreateURLDialog extends JDialog {
     private JPanel panelResultBean;
     private JLabel labelRequestName;
     private JLabel labelResultName;
+    private JComboBox<String> comboBoxInterface;
     private MVVMSettingUIHelper codeHelper;
     private OnClickListener listener;
 
@@ -92,7 +93,7 @@ public class CreateURLDialog extends JDialog {
             comboBoxRequest.addItem(request);
         }
 
-        for (String request:codeHelper.getListBean()){
+        for (String request : codeHelper.getListBean()) {
             comboBoxRequest.addItem(request);
         }
 
@@ -100,7 +101,7 @@ public class CreateURLDialog extends JDialog {
             comboBoxResult.addItem(result);
         }
 
-        for (String result:codeHelper.getListBean()){
+        for (String result : codeHelper.getListBean()) {
             comboBoxResult.addItem(result);
         }
 
@@ -153,7 +154,7 @@ public class CreateURLDialog extends JDialog {
         codeHelper.bindTextArea(textAreaRequest, textAreaResult,
                 textAreaFunCode, textAreaRequestBean, textAreaResultBean);
         codeHelper.setURLDocumentListener(textFieldURL, textFieldFunName, textFieldRequestName, textFieldResultName);
-        codeHelper.setTypeListener(comboBoxRequest, comboBoxResult);
+        codeHelper.bindComboBox(comboBoxInterface, comboBoxRequest, comboBoxResult);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);

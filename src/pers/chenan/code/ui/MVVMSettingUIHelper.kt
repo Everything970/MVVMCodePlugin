@@ -4,9 +4,13 @@ import pers.chenan.code.code.TemplateCode
 import pers.chenan.code.setting.PluginSetting
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
+import com.intellij.psi.PsiManager
 import com.intellij.psi.search.GlobalSearchScope
 import pers.chenan.code.util.BeanCodeHelper
 import pers.chenan.code.util.Utils
+import pers.chenan.code.util.document
+import pers.chenan.code.util.findFileByUrl
+import java.util.regex.Pattern
 import javax.swing.JComboBox
 import javax.swing.JTextArea
 import javax.swing.JTextField
@@ -43,6 +47,7 @@ class MVVMSettingUIHelper(private val project: Project) {
 
     var comboBoxRequestType: JComboBox<String>? = null
     var comboBoxResultType: JComboBox<String>? = null
+    var comboBoxInterface: JComboBox<String>? = null
 
     val funURL: String
         get() = textFieldURL?.text ?: ""
@@ -141,9 +146,19 @@ class MVVMSettingUIHelper(private val project: Project) {
         })
     }
 
-    fun setTypeListener(cbRequestType: JComboBox<String>, cbResultType: JComboBox<String>) {
+    fun bindComboBox(cbInterface: JComboBox<String>, cbRequestType: JComboBox<String>, cbResultType: JComboBox<String>) {
         comboBoxRequestType = cbRequestType
         comboBoxResultType = cbResultType
+        comboBoxInterface=cbInterface
+        PsiManager.getInstance(project).findFileByUrl(setting.retrofitPath)?.document?.let { document ->
+            val p = Pattern.compile("(interface\\s\\w*)")
+            p.matcher(document.text)?.let { matcher ->
+                while (matcher.find()) {
+                    cbInterface.addItem(matcher.group(1))
+                }
+            }
+        }
+        cbInterface.selectedItem = setting.retrofitInterface
         cbRequestType.addActionListener {
             makeRequest()
         }

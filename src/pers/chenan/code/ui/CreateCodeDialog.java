@@ -64,8 +64,8 @@ public class CreateCodeDialog extends JDialog {
         btAddViewModel.addActionListener(e -> setting.getMvvm().addTemplateCode(boxViewModel, 1));
         btDeleteViewModel.addActionListener(e -> setting.getMvvm().deleteTemplateCode(boxViewModel, 1));
         btEditLayout.addActionListener(e -> setting.getMvvm().editTemplateCode(boxLayout, 2));
-        btAddLayout.addActionListener(e -> setting.getMvvm().addTemplateCode(boxViewModel, 2));
-        btDeleteLayout.addActionListener(e -> setting.getMvvm().deleteTemplateCode(boxViewModel, 2));
+        btAddLayout.addActionListener(e -> setting.getMvvm().addTemplateCode(boxLayout, 2));
+        btDeleteLayout.addActionListener(e -> setting.getMvvm().deleteTemplateCode(boxLayout, 2));
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

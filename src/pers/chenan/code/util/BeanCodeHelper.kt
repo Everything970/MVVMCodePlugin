@@ -3,7 +3,7 @@ package pers.chenan.code.util
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import java.net.CacheRequest
+import kotlin.text.StringBuilder
 
 class BeanCodeHelper {
     @Throws(Exception::class)
@@ -13,7 +13,7 @@ class BeanCodeHelper {
         val innerList = arrayListOf<Pair<String, JsonObject>>()
 
         val jsonObject = Gson().fromJson<JsonObject>(json, JsonObject::class.java)
-        val sb = StringBuffer()
+        val sb = StringBuilder()
         sb.append("package $packageName").append('\n')
                 .append("#dependencyClass").append('\n')
                 .append("class $beanName {").append('\n')
@@ -28,25 +28,32 @@ class BeanCodeHelper {
         }
         sb.append("#innerClass").append('\n')
         sb.append("}")
-        return sb.toString().let { str ->
-            str.replace("#dependencyClass", dependencyList.joinToString("\n") {
-                "import $it"
-            }).replace("#innerClass", innerList.joinToString("\n") {
-                val c = StringBuffer()
-                c.append("class ${it.first}{").append('\n')
-                it.second.keySet().forEach { key ->
-                    val type = getType(it.second.get(key), key, innerList)
+        val isb = StringBuilder()
+        var index = 0
+        while (index != innerList.size) {
+            val list = innerList.toList()
+            val start = index
+            for (i in start until list.size) {
+                index = i + 1
+                val data = list[i]
+                isb.append("class ${data.first}{").append('\n')
+                data.second.keySet().forEach { key ->
+                    val type = getType(data.second.get(key), key, innerList)
                     if (type.flag == 0) {
-                        c.append("\t//")
+                        isb.append("\t//")
                     } else {
-                        c.append("\t")
+                        isb.append("\t")
                     }
-                    c.append("var $key: ${type.name} = ${type.value}").append('\n')
+                    isb.append("var $key: ${type.name} = ${type.value}").append('\n')
                 }
-                c.append("}").append('\n')
-                c.toString()
-            })
+                isb.append("}").append('\n')
+            }
         }
+        val innerStr = isb.delete(isb.length - 1, isb.length).toString()
+
+        return sb.toString()
+                .replace("#dependencyClass", dependencyList.joinToString("\n") { "import $it" })
+                .replace("#innerClass", innerStr)
     }
 
 
@@ -100,6 +107,8 @@ class BeanCodeHelper {
                     }
                     jeStr.toIntOrNull() != null || jeStr.toLongOrNull() != null -> {
                         when {
+                            arrayOf("Price", "price").any { key.endsWith(it) } ->
+                                Type(3, "Float", "0f")
                             arrayOf("ID", "Id", "id", "IDs", "Ids", "ids").any { key.endsWith(it) } ->
                                 Type(3, "Long", "0L")
                             arrayOf("State", "state", "Type", "type", "Status", "status").any { key.contains(it) } ->
@@ -112,7 +121,14 @@ class BeanCodeHelper {
                                 Type(3, "Long", "0L")
                         }
                     }
-                    jeStr.toDoubleOrNull() != null -> Type(3, "Double", "0.0")
+                    jeStr.toDoubleOrNull() != null -> {
+                        when {
+                            arrayOf("Price", "price").any { key.endsWith(it) } ->
+                                Type(3, "Float", "0f")
+                            else ->
+                                Type(3, "Double", "0.0")
+                        }
+                    }
                     else -> Type()
                 }
             }

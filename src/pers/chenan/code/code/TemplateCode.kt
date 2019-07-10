@@ -74,7 +74,7 @@ object TemplateCode {
 
     const val interfaceFunCode = "#javadoc\n" +
             "@FormUrlEncoded\n" +
-            "@Post(\"#url\")\n" +
+            "@POST(\"#url\")\n" +
             "fun #funName(#requestParameter):Call<BaseEntity<#resultBean>>\n"
 
     

@@ -14,6 +14,8 @@ import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiManager
+import pers.chenan.code.util.document
+import pers.chenan.code.util.findFileByUrl
 
 class CreateURLAction : AnAction() {
 
@@ -36,17 +38,15 @@ class CreateURLAction : AnAction() {
 
     private fun createCode(helper: MVVMSettingUIHelper, project: Project, editor: Editor) {
         val setting = PluginSetting.getInstance(project)
-        VirtualFileManager.getInstance().findFileByUrl(setting.retrofitPath)?.let { virtualFile ->
-            PsiManager.getInstance(project).findFile(virtualFile)?.let { psiFile ->
-                PsiDocumentManager.getInstance(project).getDocument(psiFile)?.let { document ->
-                    var start = document.text.indexOf(setting.retrofitInterface)
-                    start = document.text.indexOf('{', start)
-                    if (start >= 0) {
-                        start += 2
-                        WriteCommandAction.runWriteCommandAction(project) {
-                            document.insertString(start, helper.funCode.replace("\n", "\n\t\t"))
-                        }
-                    }
+        PsiManager.getInstance(project).findFileByUrl(setting.retrofitPath)?.document?.let { document ->
+            val interfaceStr = helper.comboBoxInterface?.selectedItem?.toString() ?: setting.retrofitInterface
+            setting.retrofitInterface = interfaceStr
+            var start = document.text.indexOf(interfaceStr)
+            start = document.text.indexOf('{', start)
+            if (start >= 0) {
+                start += 2
+                WriteCommandAction.runWriteCommandAction(project) {
+                    document.insertString(start, helper.funCode.replace("\n", "\n\t\t"))
                 }
             }
         }

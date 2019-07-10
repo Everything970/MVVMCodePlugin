@@ -9,6 +9,7 @@ import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import java.util.regex.Pattern
 import javax.swing.JCheckBox
@@ -65,12 +66,14 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
         ui.checkBoxRetrofit.isSelected = setting.isOpen
         ui.jPanelBean.isVisible = setting.isOpen
         ui.jPanelRetrofit.isVisible = setting.isOpen
+        ui.panelFunCode.isVisible = setting.isOpen
         ui.textAreaFunCode.text = setting.interfaceFunCode
         ui.textFieldBeanPath.text = setting.beanPackagePath
         if (setting.retrofitPath.isNotEmpty())
             VirtualFileManager.getInstance().findFileByUrl(setting.retrofitPath)?.let { virtualFile ->
                 PsiManager.getInstance(project).findFile(virtualFile)?.let { psiFile ->
                     ui.textFieldRetrofitPath.text = psiFile.pathByProject
+                    selectedRetrofitPath = psiFile.virtualFile.url
                     PsiDocumentManager.getInstance(project).getDocument(psiFile)?.let { document ->
                         val p = Pattern.compile("(interface\\s\\w*)")
                         p.matcher(document.text)?.let { matcher ->
@@ -83,7 +86,6 @@ class MVVMConfigurable(private val project: Project) : SearchableConfigurable {
                     }
                 }
             }
-
     }
 
     @Throws(NullPointerException::class)
