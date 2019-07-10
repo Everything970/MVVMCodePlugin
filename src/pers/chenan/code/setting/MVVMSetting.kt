@@ -1,22 +1,19 @@
 package pers.chenan.code.setting
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopupFactory
-import org.jdom.Element
+import com.intellij.util.xmlb.XmlSerializerUtil
 import pers.chenan.code.code.TemplateCode
 import pers.chenan.code.ui.WriteCodeDialog
 import pers.chenan.code.util.Utils
 import javax.swing.JComboBox
 
-class MVVMSetting: PersistentStateComponent<Element> {
+class MVVMSetting : PersistentStateComponent<MVVMSetting> {
 
-    val activityMap: HashMap<String, String> = hashMapOf()
-    val viewModelMap: HashMap<String, String> = hashMapOf()
-    val layoutMap: HashMap<String, String> = hashMapOf()
+    var activityMap: HashMap<String, String> = hashMapOf()
+    var viewModelMap: HashMap<String, String> = hashMapOf()
+    var layoutMap: HashMap<String, String> = hashMapOf()
 
     var isNeedConfirm: Boolean = true
     var activity: String = Utils.defaultActivity
@@ -30,32 +27,36 @@ class MVVMSetting: PersistentStateComponent<Element> {
     val layoutCode: String?
         get() = if (layout == Utils.defaultLayout) TemplateCode.layoutCode else layoutMap[layout]
 
-    override fun getState(): Element? {
-        return Element("MVVMSetting").apply {
-            setAttribute("is_need_confirm", isNeedConfirm.toString())
-            setAttribute("activity", activity)
-            setAttribute("view_model", viewModel)
-            setAttribute("layout", layout)
-            setAttribute("code_map", Gson().toJson(listOf(activityMap, viewModelMap, layoutMap)))
-        }
+    override fun getState(): MVVMSetting? {
+//        return Element("MVVMSetting").apply {
+//            setAttribute("is_need_confirm", isNeedConfirm.toString())
+//            setAttribute("activity", activity)
+//            setAttribute("view_model", viewModel)
+//            setAttribute("layout", layout)
+//            setAttribute("code_map", Gson().toJson(listOf(activityMap, viewModelMap, layoutMap)))
+//        }
+        return this
     }
 
-    override fun loadState(p0: Element) {
-        isNeedConfirm = p0.getAttributeValue("is_need_confirm")?.toBoolean() ?: true
-        activity = p0.getAttributeValue("activity") ?: Utils.defaultActivity
-        viewModel = p0.getAttributeValue("view_model") ?: Utils.defaultViewModel
-        layout = p0.getAttributeValue("layout") ?: Utils.defaultLayout
-        val json = p0.getAttributeValue("code_map")
-        if (!json.isNullOrEmpty()) {
-            val list = Gson().fromJson<List<Map<String, String>>>(json, (object : TypeToken<List<Map<String, String>>>() {}).type)
-            activityMap.clear()
-            activityMap.putAll(list.getOrElse(0) { mapOf() })
-            viewModelMap.clear()
-            viewModelMap.putAll(list.getOrElse(1) { mapOf() })
-            layoutMap.clear()
-            layoutMap.putAll(list.getOrElse(2) { mapOf() })
-        }
+    override fun loadState(p0: MVVMSetting) {
+        XmlSerializerUtil.copyBean(p0, this)
+
+//        isNeedConfirm = p0.getAttributeValue("is_need_confirm")?.toBoolean() ?: true
+//        activity = p0.getAttributeValue("activity") ?: Utils.defaultActivity
+//        viewModel = p0.getAttributeValue("view_model") ?: Utils.defaultViewModel
+//        layout = p0.getAttributeValue("layout") ?: Utils.defaultLayout
+//        val json = p0.getAttributeValue("code_map")
+//        if (!json.isNullOrEmpty()) {
+//            val list = Gson().fromJson<List<Map<String, String>>>(json, (object : TypeToken<List<Map<String, String>>>() {}).type)
+//            activityMap.clear()
+//            activityMap.putAll(list.getOrElse(0) { mapOf() })
+//            viewModelMap.clear()
+//            viewModelMap.putAll(list.getOrElse(1) { mapOf() })
+//            layoutMap.clear()
+//            layoutMap.putAll(list.getOrElse(2) { mapOf() })
+//        }
     }
+
     fun containsActivity(activity: String): Boolean {
         return activity == Utils.defaultActivity || activityMap.containsKey(activity)
     }

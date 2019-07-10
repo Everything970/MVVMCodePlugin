@@ -8,11 +8,12 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopupFactory
+import com.intellij.util.xmlb.XmlSerializerUtil
 import org.jdom.Element
 import pers.chenan.code.ui.WriteCodeDialog
 import javax.swing.JComboBox
 
-class PluginSetting : PersistentStateComponent<Element> {
+class PluginSetting : PersistentStateComponent<PluginSetting> {
 
     val mvvm = MVVMSetting.getInstance()
     var isOpen: Boolean = false
@@ -22,23 +23,24 @@ class PluginSetting : PersistentStateComponent<Element> {
     var interfaceFunCode: String = TemplateCode.interfaceFunCode
 
 
-    override fun getState(): Element? {
-        return Element("PluginSetting").apply {
-            setAttribute("is_open", isOpen.toString())
-            setAttribute("bean_path", beanPackagePath)
-            setAttribute("retrofit_path", retrofitPath)
-            setAttribute("retrofit_interface", retrofitInterface)
-            setAttribute("interface_fun_code", interfaceFunCode)
-        }
+    override fun getState(): PluginSetting? {
+//        return Element("PluginSetting").apply {
+//            setAttribute("is_open", isOpen.toString())
+//            setAttribute("bean_path", beanPackagePath)
+//            setAttribute("retrofit_path", retrofitPath)
+//            setAttribute("retrofit_interface", retrofitInterface)
+//            setAttribute("interface_fun_code", interfaceFunCode)
+//        }
+        return this
     }
 
-    override fun loadState(p0: Element) {
-        isOpen = p0.getAttributeValue("is_open")?.toBoolean() ?: false
-        beanPackagePath = p0.getAttributeValue("bean_path") ?: ""
-        retrofitPath = p0.getAttributeValue("retrofit_path") ?: ""
-        retrofitInterface = p0.getAttributeValue("retrofit_interface") ?: ""
-        interfaceFunCode = p0.getAttributeValue("interface_fun_code") ?: TemplateCode.interfaceFunCode
-
+    override fun loadState(p0: PluginSetting) {
+//        isOpen = p0.getAttributeValue("is_open")?.toBoolean() ?: false
+//        beanPackagePath = p0.getAttributeValue("bean_path") ?: ""
+//        retrofitPath = p0.getAttributeValue("retrofit_path") ?: ""
+//        retrofitInterface = p0.getAttributeValue("retrofit_interface") ?: ""
+//        interfaceFunCode = p0.getAttributeValue("interface_fun_code") ?: TemplateCode.interfaceFunCode
+        XmlSerializerUtil.copyBean(p0, this)
     }
 
     companion object {

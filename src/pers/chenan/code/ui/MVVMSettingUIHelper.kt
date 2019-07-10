@@ -27,7 +27,7 @@ class MVVMSettingUIHelper(private val project: Project) {
     val listBean: List<String> by lazy {
         JavaPsiFacade.getInstance(project).findPackage(setting.beanPackagePath)?.getFiles(GlobalSearchScope.allScope(project))?.let { arrayOfPsiFiles ->
             arrayOfPsiFiles.filter { it.name.endsWith(".kt") }.map { it.name }
-        } ?: listOf()
+        }?.sorted() ?: listOf()
     }
 
     private val interfaceFunCode = setting.interfaceFunCode
@@ -149,7 +149,7 @@ class MVVMSettingUIHelper(private val project: Project) {
     fun bindComboBox(cbInterface: JComboBox<String>, cbRequestType: JComboBox<String>, cbResultType: JComboBox<String>) {
         comboBoxRequestType = cbRequestType
         comboBoxResultType = cbResultType
-        comboBoxInterface=cbInterface
+        comboBoxInterface = cbInterface
         PsiManager.getInstance(project).findFileByUrl(setting.retrofitPath)?.document?.let { document ->
             val p = Pattern.compile("(interface\\s\\w*)")
             p.matcher(document.text)?.let { matcher ->
@@ -185,7 +185,7 @@ class MVVMSettingUIHelper(private val project: Project) {
         when {
             requestType == "Bean" -> {//Bean
                 textAreaRequest?.text = try {
-                    helper.getBeanString(requestDocument, setting.beanPackagePath.substring(setting.beanPackagePath.indexOf("java") + 5), requestName)
+                    helper.getBeanString(requestDocument, setting.beanPackagePath.substring(setting.beanPackagePath.indexOf("java") + 1), requestName)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     "Error"
@@ -216,7 +216,7 @@ class MVVMSettingUIHelper(private val project: Project) {
         when {
             resultType == "Bean" -> {//Bean
                 textAreaResult?.text = try {
-                    helper.getBeanString(resultDocument, setting.beanPackagePath.substring(setting.beanPackagePath.indexOf("java") + 5), resultName)
+                    helper.getBeanString(resultDocument, setting.beanPackagePath.substring(setting.beanPackagePath.indexOf("java") + 1), resultName)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     "Error"
@@ -237,7 +237,7 @@ class MVVMSettingUIHelper(private val project: Project) {
             }
             else -> {
                 textAreaResult?.text = ""
-                resultBean = requestType
+                resultBean = resultType
             }
         }
         makeFunCode()

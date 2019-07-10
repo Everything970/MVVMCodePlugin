@@ -44,6 +44,11 @@ object Utils {
         return File(getPluginPath(), TemplateCode.TYPE_LAYOUT).listFiles().filter { it.isFile && it.name.endsWith(".txt") }
     }
 
+
+    fun createActivityCode(name: String, content: String) = createCode(getPluginPath(), TemplateCode.TYPE_ACTIVITY, "$name.txt", content)
+    fun createViewModelCode(name: String, content: String) = createCode(getPluginPath(), TemplateCode.TYPE_VIEW_MODEL, "$name.txt", content)
+    fun createLayoutCode(name: String, content: String) = createCode(getPluginPath(), TemplateCode.TYPE_LAYOUT, "$name.txt", content)
+
     fun createCode(parentFile: File, type: String, name: String, content: String): File? {
         val file = File(parentFile, type)
         if (!file.exists()) {
