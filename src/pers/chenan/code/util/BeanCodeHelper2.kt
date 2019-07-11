@@ -34,6 +34,14 @@ class BeanCodeHelper2 {
             }
             is Int -> {
                 sb.append("var $key : Int=0\n")
+            }is Long -> {
+                sb.append("var $key : Long=0L\n")
+            }is Boolean -> {
+                sb.append("var $key : Boolean=false\n")
+            }is Float -> {
+                sb.append("var $key : Float=0f\n")
+            }is Double -> {
+                sb.append("var $key : Double=0\n")
             }
             is JSONObject -> {
                 val name = formatClassName(key)
@@ -51,6 +59,14 @@ class BeanCodeHelper2 {
                     when (any[0]) {
                         is Int -> {
                             sb.append("val $key : List<Int> =listOf()\n")
+                        }is Long -> {
+                            sb.append("val $key : List<Long> =listOf()\n")
+                        }is Boolean -> {
+                            sb.append("val $key : List<Boolean> =listOf()\n")
+                        }is Float -> {
+                            sb.append("val $key : List<Float> =listOf()\n")
+                        }is Double -> {
+                            sb.append("val $key : List<Double> =listOf()\n")
                         }
                         is String -> {
                             sb.append("val $key : List<String> =listOf()\n")
