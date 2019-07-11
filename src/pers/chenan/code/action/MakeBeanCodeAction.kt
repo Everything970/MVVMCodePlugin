@@ -1,12 +1,12 @@
 package pers.chenan.code.action
 
-import pers.chenan.code.ui.CreateBeanDialog
-import pers.chenan.code.util.BeanCodeHelper
-import pers.chenan.code.util.Utils
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.command.WriteCommandAction
+import pers.chenan.code.ui.CreateBeanDialog
+import pers.chenan.code.util.BeanCodeHelper
+import pers.chenan.code.util.Utils
 
 class MakeBeanCodeAction : AnAction() {
 
@@ -31,13 +31,13 @@ class MakeBeanCodeAction : AnAction() {
             title = "生成 Bean Class 代码"
             setListener(object : CreateBeanDialog.OnClickListener {
 
-                override fun onOK(beanName: String, json: String) {
+                override fun onOK(beanName: String, json: String,al:Int) {
                     val helper = BeanCodeHelper()
                     if (beanName != name) {
                         psiFile.name = "$beanName.kt"
                     }
                     WriteCommandAction.runWriteCommandAction(project) {
-                        editor.document.setText(helper.getBeanString(json, packageName, beanName))
+                        editor.document.setText(helper.getBeanString(json, packageName, beanName,al))
                     }
                 }
 

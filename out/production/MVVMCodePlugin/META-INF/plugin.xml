@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>pers.chenan.code</id>
-    <name>MVVMCodePlugin</name>
+    <name>MVVMCode</name>
     <version>0.0.5</version>
     <vendor email="chenan.970@outlook.com" url="null">ChenAn</vendor>
 
@@ -13,6 +13,7 @@
       version 0.0.2 : Add create code of Retrofit.
       version 0.0.3 : Add select kotlin bean that already exist.
       version 0.0.4 : Add "reconfirm" when create code of MVVM. (This can be unset)
+      version 0.0.5 : fix some bug
       ................................
     ]]>
     </change-notes>

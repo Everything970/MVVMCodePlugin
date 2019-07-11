@@ -1,7 +1,7 @@
 package pers.chenan.code.util
 
-import pers.chenan.code.code.TemplateCode
 import com.intellij.openapi.ui.DialogBuilder
+import pers.chenan.code.code.TemplateCode
 import java.io.*
 import javax.swing.filechooser.FileSystemView
 
@@ -10,6 +10,8 @@ object Utils {
     const val defaultActivity = "activity_code"
     const val defaultViewModel = "view_model_code"
     const val defaultLayout = "layout_code"
+    const val Gson = "Gson"
+    const val fastJson = "fastJson"
 
 
     fun getSaveUrl(): File {

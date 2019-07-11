@@ -1,11 +1,11 @@
 package pers.chenan.code.ui
 
-import pers.chenan.code.code.TemplateCode
-import pers.chenan.code.setting.PluginSetting
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaPsiFacade
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.GlobalSearchScope
+import pers.chenan.code.code.TemplateCode
+import pers.chenan.code.setting.PluginSetting
 import pers.chenan.code.util.BeanCodeHelper
 import pers.chenan.code.util.Utils
 import pers.chenan.code.util.document
@@ -47,6 +47,7 @@ class MVVMSettingUIHelper(private val project: Project) {
 
     var comboBoxRequestType: JComboBox<String>? = null
     var comboBoxResultType: JComboBox<String>? = null
+
     var comboBoxInterface: JComboBox<String>? = null
 
     val funURL: String
@@ -149,7 +150,7 @@ class MVVMSettingUIHelper(private val project: Project) {
     fun bindComboBox(cbInterface: JComboBox<String>, cbRequestType: JComboBox<String>, cbResultType: JComboBox<String>) {
         comboBoxRequestType = cbRequestType
         comboBoxResultType = cbResultType
-        comboBoxInterface=cbInterface
+        comboBoxInterface = cbInterface
         PsiManager.getInstance(project).findFileByUrl(setting.retrofitPath)?.document?.let { document ->
             val p = Pattern.compile("(interface\\s\\w*)")
             p.matcher(document.text)?.let { matcher ->
@@ -185,7 +186,7 @@ class MVVMSettingUIHelper(private val project: Project) {
         when {
             requestType == "Bean" -> {//Bean
                 textAreaRequest?.text = try {
-                    helper.getBeanString(requestDocument, setting.beanPackagePath.substring(setting.beanPackagePath.indexOf("java") + 5), requestName)
+                    helper.getBeanString(requestDocument, setting.beanPackagePath.substring(setting.beanPackagePath.indexOf("java") + 5), requestName, 0)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     "Error"
@@ -216,7 +217,7 @@ class MVVMSettingUIHelper(private val project: Project) {
         when {
             resultType == "Bean" -> {//Bean
                 textAreaResult?.text = try {
-                    helper.getBeanString(resultDocument, setting.beanPackagePath.substring(setting.beanPackagePath.indexOf("java") + 5), resultName)
+                    helper.getBeanString(resultDocument, setting.beanPackagePath.substring(setting.beanPackagePath.indexOf("java") + 5), resultName, 0)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     "Error"

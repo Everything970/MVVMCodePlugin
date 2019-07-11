@@ -1,18 +1,26 @@
 package pers.chenan.code.util
 
+import com.alibaba.fastjson.JSON
+import com.alibaba.fastjson.JSONArray
+import com.alibaba.fastjson.JSONObject
+import com.alibaba.fastjson.parser.Feature
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import kotlin.text.StringBuilder
 
 class BeanCodeHelper {
+    fun getBeanString(json: String, packageName: String, beanName: String, al: Int): String {
+
+        return if (al == 0) getBeanString1(json, packageName, beanName) else getBeanString2(json, packageName, beanName)
+    }
+
     @Throws(Exception::class)
-    fun getBeanString(json: String, packageName: String, beanName: String): String {
+    fun getBeanString1(json: String, packageName: String, beanName: String): String {
 
         val dependencyList = arrayListOf<String>()
         val innerList = arrayListOf<Pair<String, JsonObject>>()
 
-        val jsonObject = Gson().fromJson<JsonObject>(json, JsonObject::class.java)
+        val jsonObject = Gson().fromJson(json, JsonObject::class.java)
         val sb = StringBuilder()
         sb.append("package $packageName").append('\n')
                 .append("#dependencyClass").append('\n')
@@ -60,7 +68,7 @@ class BeanCodeHelper {
     fun getFieldContent(json: String): String {
         return try {
             val innerList = arrayListOf<Pair<String, JsonObject>>()
-            val jsonObject = Gson().fromJson<JsonObject>(json, JsonObject::class.java)
+            val jsonObject = Gson().fromJson(json, JsonObject::class.java)
             val sb = StringBuffer()
             sb.append("\n")
             jsonObject.keySet().forEach { key ->
@@ -79,7 +87,7 @@ class BeanCodeHelper {
         }
     }
 
-    fun getType(jsonElement: JsonElement, key: String, innerList: ArrayList<Pair<String, JsonObject>>): Type {
+    private fun getType(jsonElement: JsonElement, key: String, innerList: ArrayList<Pair<String, JsonObject>>): Type {
         return when {
             jsonElement.isJsonNull -> {
                 return Type()
@@ -92,7 +100,9 @@ class BeanCodeHelper {
                 return Type(1, type, "$type()")
             }
             jsonElement.isJsonArray -> {
-                val je = jsonElement.asJsonArray[0]
+                val je = jsonElement.asJsonArray.let {
+                    if (it.size() == 0) null else it[0]
+                } ?: return Type()
                 val type = getType(je, key, innerList)
                 return Type(2, "List<${type.name}>", "listOf()")
             }
@@ -141,4 +151,80 @@ class BeanCodeHelper {
             var name: String = "Any?",
             var value: String = "null"
     )
+
+
+    @Throws(Exception::class)
+    fun getBeanString2(json: String, packageName: String, beanName: String): String {
+        val jsonObject = JSON.parseObject(json, Feature.OrderedField)
+        val sb = StringBuilder()
+        sb.append("package $packageName").append('\n')
+                .append("class $beanName {").append('\n')
+
+        if (jsonObject == null || jsonObject.isEmpty()) {
+            sb.append("}\n")
+        } else {
+            jsonObject.forEach { t, u ->
+                sb.append(analysisJsonObject(t, u))
+            }
+            sb.append("}\n")
+        }
+        return sb.toString()
+
+    }
+
+
+    private fun analysisJsonObject(key: String, any: Any): String {
+        val sb = StringBuilder()
+        when (any) {
+            is String -> {
+                sb.append("var $key : String=\"\"\n")
+            }
+            is Int -> {
+                sb.append("var $key : Int=0\n")
+            }
+            is JSONObject -> {
+                val name = formatClassName(key)
+                sb.append("var  $key : $name = $name() \n")
+                sb.append("class $name {\n")
+                any.forEach { t, u ->
+                    sb.append(analysisJsonObject(t, u))
+                }
+                sb.append("}\n")
+            }
+            is JSONArray -> {
+                if (any.size == 0) {
+                    sb.append("val $key : List<Any> =listOf()\n")
+                } else {
+                    when (any[0]) {
+                        is Int -> {
+                            sb.append("val $key : List<Int> =listOf()\n")
+                        }
+                        is String -> {
+                            sb.append("val $key : List<String> =listOf()\n")
+                        }
+                        is JSONObject -> {
+                            val name = formatClassName(key)
+                            sb.append("val $key : List<$name> =listOf()\n")
+                            sb.append("class $name {\n")
+                            (any[0] as JSONObject).forEach { t, u ->
+                                sb.append(analysisJsonObject(t, u))
+                            }
+                            sb.append("}\n")
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return sb.toString()
+    }
+
+
+    private fun formatClassName(str: String): String {
+        val reg = Regex("[^a-zA-Z]")
+        val sb = StringBuffer(str)
+        sb.setCharAt(0, str[0].toUpperCase())
+        return sb.replace(reg,"")
+    }
 }

@@ -1,6 +1,5 @@
 package pers.chenan.code.ui;
 
-import pers.chenan.code.util.Utils;
 import org.jetbrains.annotations.NotNull;
 import pers.chenan.code.util.Utils;
 
@@ -13,9 +12,13 @@ public class CreateBeanDialog extends JDialog {
     private JButton buttonCancel;
     private JTextField textFieldName;
     private JTextArea textAreaJson;
+    private JComboBox<String> algorithm;
     private OnClickListener listener = null;
 
     public CreateBeanDialog() {
+        algorithm.addItem(Utils.Gson);
+        algorithm.addItem(Utils.fastJson);
+        algorithm.setSelectedIndex(0);
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -60,7 +63,7 @@ public class CreateBeanDialog extends JDialog {
             Utils.showError("请输入json字符串");
             return;
         }
-        if (listener != null) listener.onOK(name, json);
+        if (listener != null) listener.onOK(name, json,algorithm.getSelectedIndex());
         dispose();
     }
 
@@ -88,7 +91,7 @@ public class CreateBeanDialog extends JDialog {
     }
 
     public interface OnClickListener {
-        void onOK(@NotNull String beanName, @NotNull String json);
+        void onOK(@NotNull String beanName, @NotNull String json,int al);
 
         void onCancel();
     }
